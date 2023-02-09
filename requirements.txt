@@ -1,0 +1,22 @@
+# Function dependencies, for example:
+# package>=version
+requests
+#json
+#pprint
+pymongo
+pytz
+datetime
+uuid
+#calendar
+#time
+psycopg2
+google-cloud-pubsub
+certifi
+python-dateutil
+moment
+aiopg
+functions_framework
+pynput
+python-dotenv
+jstyleson
+

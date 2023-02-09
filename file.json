@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "scrapyomama-335508",
+  "private_key_id": "6ecc9e5485171a980dbb6d65a125c1111f93824e",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDij6Ov8OPopMnD\nlNRURk26KD8cSacj+W1DR+IOchnxBmYeC9fpPTHQ7C6vOxUm2W368geMk7yo1/GK\nhLSTegrDdXnnebKq26m4JxMqXnnJj7vIM1R4VeS2r3+bEfDfeJIv+5T+R+Z8JtJz\nAgmKSfoTWURQwsau9xNJfRxYijKpLmhdMHhSdEGq5iXQBFZae4TJpwRAbTSeAuIh\nHFKZcyMt5UjUno8d3BuWs0Xc1o60Bja8T0EGo0+J4IiCkG/6uO+D5FCR0a0kfPdm\nCdpji6wwUFHfsiDcwG23IWGqDRDAlRToY3JiVjcozhEg4xhbf67rn8b6ERFf0Tjg\nkWv3hT9BAgMBAAECggEADe9l0wmPCx0vp878rF5So5OcJiJFnInX9Z5zQg40mEWb\nfFegJSF1cfNE/9Qzfds7z4aZfkUMApqdqbZ14OhNxy3vnJQ4sBeovcHxhNagyQwF\nMdAubuRhl/b9c01MMoKZA0iHJojHnXVJ1ncWnSHlttDzyb/hNpvN3ORMHQoLCarK\nbsqkYbHIYZ+PNEEJc0WqjvwAa0LTKyPVruBHWW4qzqXh9GbJmuA/nduZsxq7OzrK\nNYwjQxCCmpBxFAFW81yk6DpoV7vA03aXwbtVveBr29DKUU9LzWnkhWGg35VvidhG\njQWe4KlpHHLCEHxtJySUCv4eQMcFCfEJUy8+4OyQ0QKBgQD4MumZ6y9NdKQ6UIQc\n6TCqRXSl28TEito8djAWvmTgAVKNiNkmeiXRpq8tpjobs29A+QFB50izG2W3J2UU\nhuhKeLntrjhNrwBHVjZE5qy+9rDyA0qgqxmo3PKXam0AHWaY0BeR+AEIdXeyzTFI\nf9Qgb4KRhWehA3YJb9uVa9he5QKBgQDprp9S+3x0eNFEnII2P14rs5n85FtP4OyE\nN6iVa5ESyvs6KqLscIi48UW57EeU2rzYp6ggUwAR6pI2HVmHvH5ijx1k+dIdBBlY\n+NSybxRKP73ZiRtIxSLNyhsWIHyer8SXkyxR0ofgRwBYqMONtdYolP+5v8Y4OOn/\nWc+uhmA9LQKBgA3wxiAoDosaLxM7bIA3NM2LgybBtkaXyfQ1azQL05ylVl6uvguk\nNrWU2CgHOyJNLMWIduKdu/6bXlYwN0Q0450zNLY939m1J53aIMgz8KX1MzEUsD9f\n/Nv4NQP+LUshW57fqUNAm8Y+2s9HKSp6S47a1ImZ5Z0slZeoGbxFx2xlAoGBAI7l\npbAM8VIX/4BBZK7fmSqILYYj7mKuXHONxZ15pcEkNvSe1fpX5oORpt3Gyw8Po6Op\nAnqhxs0t8DL/R5xle7OxaHwy+HWd6BIsN4TVwEaXK/U2jmS1iE7nZCDnxM0VFtbJ\nvLRcVZKkWGXe7ZZet5Mhai+gQgpnY1AvD3zd10QRAoGAa0Qyj4c6OyQmZcEXj0ft\n8w0y817GgNdT2sPb9sJZd1TOQAH0Y6A+wCLn/sTkfRIb06LPJJLAS3qUdvq2b1/6\n2D6hR1IWOqCmLi8rtYwyqBsUNX0v+ljGmpQ2KeNM9K6UF2FMggNEltTsHP1QiidJ\n6D1zsmsGOU7UIhX2G+Jw4hQ=\n-----END PRIVATE KEY-----\n",
+  "client_email": "scrapyoservice@scrapyomama-335508.iam.gserviceaccount.com",
+  "client_id": "100443637177325527720",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/scrapyoservice%40scrapyomama-335508.iam.gserviceaccount.com"
+}
