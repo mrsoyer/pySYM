@@ -1,0 +1,7 @@
+LICENSE
+README.md
+setup.py
+scrapyomama.egg-info/PKG-INFO
+scrapyomama.egg-info/SOURCES.txt
+scrapyomama.egg-info/dependency_links.txt
+scrapyomama.egg-info/top_level.txt

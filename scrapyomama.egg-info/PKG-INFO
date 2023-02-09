@@ -1,8 +1,8 @@
 Metadata-Version: 2.1
-Name: sym
-Version: 0.0.1
+Name: scrapyomama
+Version: 0.0.2
 Summary: Scrap Yo Mama
-Home-page: https://github.com/mrsoyer/pySYM
+Home-page: https://github.com/mrsoyer/symtest
 Author: Thomas Garcia
 Author-email: garciathomas@gmail.com
 Classifier: Programming Language :: Python :: 3
