@@ -19,4 +19,5 @@ def run(request):
         os.system('git commit -m m')
         os.system('git push origin main')
         os.system('gcloud functions deploy sym --service-account sym-295@xtra-mobile-app.iam.gserviceaccount.com --trigger-http --runtime python311 --allow-unauthenticated --region=europe-west1 --entry-point=http --set-env-vars '+env+' --source https://source.developers.google.com/projects/xtra-mobile-app/repos/github_mrsoyer_pysym/revisions/main')
+        return("Sym : https://europe-west1-xtra-mobile-app.cloudfunctions.net/sym")
         

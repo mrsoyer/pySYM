@@ -16,4 +16,4 @@ def run(request):
         env = env[:-1]
         #print('gcloud functions deploy sym --trigger-http --runtime python311 --allow-unauthenticated --region=europe-west1 --entry-point=http --set-env-vars '+env+' --source  https://source.developers.google.com/projects/xtra-mobile-app/repos/github_mrsoyer_pysym/moveable-aliases/main/paths/.')
         os.system('git pull')
-        
+        return ""
