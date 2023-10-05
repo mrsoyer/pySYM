@@ -20,5 +20,4 @@ pynput
 python-dotenv
 jstyleson
 random_word
-telethon
 db-sqlite3
