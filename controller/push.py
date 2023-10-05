@@ -14,4 +14,9 @@ def run(request):
             #print(line)
             env = env+str(line).replace("\n",",")
         env = env[:-1]
-        os.system('gcloud functions deploy sym --trigger-http --runtime python311 --allow-unauthenticated --region=europe-west1 --entry-point=http --set-env-vars '+env)
+        #print('gcloud functions deploy sym --trigger-http --runtime python311 --allow-unauthenticated --region=europe-west1 --entry-point=http --set-env-vars '+env+' --source  https://source.developers.google.com/projects/xtra-mobile-app/repos/github_mrsoyer_pysym/moveable-aliases/main/paths/.')
+        os.system('git add .')
+        os.system('git commit -m m')
+        os.system('git push origin main')
+        os.system('gcloud functions deploy sym --service-account sym-295@xtra-mobile-app.iam.gserviceaccount.com --trigger-http --runtime python311 --allow-unauthenticated --region=europe-west1 --entry-point=http --set-env-vars '+env+' --source https://source.developers.google.com/projects/xtra-mobile-app/repos/github_mrsoyer_pysym/revisions/main')
+        
