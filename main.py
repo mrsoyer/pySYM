@@ -29,7 +29,7 @@ def pubSub(event, context):
     pubsub_message = base64.b64decode(event['data']).decode('utf-8')
     request = json.loads(pubsub_message)
     SYM = symClient(os.getenv('MONGODB'),os.getenv('PROD_LINK'),os.getenv('DB'))
-    SYM.pubSub(request)
+    print(SYM.pubSub(request))
 
 def cli():
     global SYM
