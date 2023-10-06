@@ -16,25 +16,19 @@ load_dotenv(dotenv_path=dotenv_path)
 @functions_framework.http
 def local(request):
     global SYM
-    SYM = symClient(os.getenv('MONGODB'),os.getenv('LOCAL_LINK'),os.getenv('DB'),"certifi")
-    return(SYM.http(request))
+    SYM = symClient()
+    return(SYM.http(request),SYM)
 
 def http(request):
     global SYM
-    SYM = symClient(os.getenv('MONGODB'),os.getenv('PROD_LINK'),os.getenv('DB'))
-    return(SYM.http(request))
+    SYM = symClient()
+    return(SYM.http(request),SYM)
 
-def pubSub(event, context):
-    global SYM
-    pubsub_message = base64.b64decode(event['data']).decode('utf-8')
-    request = json.loads(pubsub_message)
-    SYM = symClient(os.getenv('MONGODB'),os.getenv('PROD_LINK'),os.getenv('DB'))
-    print(SYM.pubSub(request))
 
 def cli():
     global SYM
-    SYM = symClient(os.getenv('MONGODB'),os.getenv('LOCAL_LINK'),os.getenv('DB'),"certifi")
-    return(SYM.cli(sys.argv))
+    SYM = symClient()
+    return(SYM.cli(sys.argv,SYM))
     
      
     

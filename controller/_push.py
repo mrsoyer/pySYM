@@ -2,7 +2,7 @@ import os
 
 
 
-def run(request):
+def run(request,SYM):
     current_script_path = os.path.abspath(__file__)
     current_script_directory = os.path.dirname(current_script_path)
     env_path = os.path.join(current_script_directory,'..', '.env')

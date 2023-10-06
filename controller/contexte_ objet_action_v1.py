@@ -1,2 +1,2 @@
-def run(request):
+def run(request,SYM):
     return{"request" : request}

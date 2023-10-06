@@ -7,36 +7,7 @@ import os
 
 
 class symClient:
-        def __init__(self, mongo, url,db,ssl = None, workflow = None , trigger= None, var= None, nodes = None, getNode = None, node = None, nodeApp= None, step= None, request= None,collection= None):
-                self.mg = str(mongo)       
-                if ssl is not None:
-                        self.env = "local"
-
-                else:
-                         self.env = "prod"
-                self.url = url
-                self.db = db
-                self.ssl = ssl
-                if workflow is not None:
-                        self.workflow = workflow
-                if trigger is not None:
-                        self.trigger = trigger
-                if var is not None:
-                        self.var = var
-                if nodes is not None:
-                        self.nodes = nodes
-                if getNode is not None:
-                        self.getNode = getNode
-                if node is not None:    
-                        self.node = node
-                if collection is not None:    
-                        self.collection = collection
-                if nodeApp is not None:                
-                        self.nodeApp = nodeApp
-                if step is not None:
-                        self.step = step
-                if request is not None:
-                        self.request = request
+      
         def read(self,val,SYM):
                 if isinstance(val, str):
                         if val[0] == "$":
@@ -75,12 +46,24 @@ class symClient:
 
         def app(self,controller):
                 core = __import__("app."+controller)
-                s = getattr(core, "app")
-                file = getattr(s, controller)
+                #s = getattr(core, "app")
+                file = getattr(core, controller)
                 
                 return(file)
 
         
+        def env(self,key = None):
+                if key is None:
+                        env_vars = os.environ
+                        out = {}
+                        for key, value in env_vars.items():
+                                out[key] = value
+                        return out
+                else:
+                        return os.environ.get(key)
+
+        #def var(self,key,value):
+
 
         def controller(self,controller):
                 
@@ -91,7 +74,7 @@ class symClient:
                 
                 return(file)
 
-        def cli(self,request):
+        def cli(self,request,SYM):
                 request.pop(0)
                 #self.e.pop(0)
                 try:
@@ -141,11 +124,11 @@ class symClient:
                         "get" : get,
                         "body" : body
                 }
-                return(Def(request))
+                return(Def(request,SYM))
 
 
       
-        def http(self,request):
+        def http(self,request,SYM):
                 #return(self.e.view_args)
                 #return(self.e.get_json())
                 #self.e.pop(0)
@@ -177,7 +160,7 @@ class symClient:
                         "get" : get,
                         "body" : body
                 }
-                return(Def(request))
+                return(Def(request,SYM))
 
 
 
