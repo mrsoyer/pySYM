@@ -1,5 +1,3 @@
-import pymongo
-from pymongo import MongoClient
 import certifi
 import json
 import requests

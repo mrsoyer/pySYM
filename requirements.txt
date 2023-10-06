@@ -3,7 +3,6 @@
 requests
 #json
 #pprint
-pymongo
 pytz
 datetime
 uuid
