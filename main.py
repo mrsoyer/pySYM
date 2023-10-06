@@ -17,12 +17,12 @@ load_dotenv(dotenv_path=dotenv_path)
 def local(request):
     global SYM
     SYM = symClient()
-    return(SYM.http(request),SYM)
+    return(SYM.http(request,SYM))
 
 def http(request):
     global SYM
     SYM = symClient()
-    return(SYM.http(request),SYM)
+    return(SYM.http(request,SYM))
 
 
 def cli():
