@@ -75,15 +75,18 @@ class symClient:
         def cli(self,request,SYM):
                 request.pop(0)
                 #self.e.pop(0)
-                try:
-                        controller = request.pop(0)
-                except:
-                        return ("""Usage: sym [controleur] [--GET_KEY=GET_VALUE] [--data=DATA] [--dataFolder=DATA_FOLDER] [--dataUrl=DATA_URL]] [--help]""")
+                #try:
+                controller = request.pop(0)
+                func = "run"
+                if len(request) > 0 :
+                        func = request.pop(0)
+                #except:
+                        #return ("""Usage: sym [controleur] [--GET_KEY=GET_VALUE] [--data=DATA] [--dataFolder=DATA_FOLDER] [--dataUrl=DATA_URL]] [--help]""")
                 request = list(request)
                 core = __import__("controller."+controller)
                 #s = getattr(core, "controller")
                 file = getattr(core, controller)
-                Def = getattr(file, "run")
+                Def = getattr(file,func)
                 
                 get = {}
                 folder = []
@@ -148,10 +151,14 @@ class symClient:
                         get = {}
 
                 controller = path.pop(0)
+                func = "run"
+                if(len(path) > 0):
+                        func = path.pop(0)
+
                 core = __import__("controller."+controller)
                 #s = getattr(core, "controller")
                 file = getattr(core, controller)
-                Def = getattr(file, "run")
+                Def = getattr(file, func)
 
                 request = {
                         "folder" : path,
