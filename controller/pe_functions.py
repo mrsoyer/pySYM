@@ -1,8 +1,12 @@
 
+def test(request,SYM):
+    return request
 
 def scrape_offers(request, SYM):
     # url = "https://candidat.pole-emploi.fr/offres/recherche?domaine=M,D,G,H,M16,K,N&emission=1&lieux=13201&natureOffre=FS,E2&offresPartenaires=false&qualification=0,X&rayon=50&tri=1&typeContrat=CDI,CDD,SAI"
     # return request["get"]["url"]
+    print(request)
+    return SYM.app('pe').test(request["body"]["url"])
     return SYM.app('pe').scrape_job_offers(request["body"]["url"])
 
 def scrape_details(request, SYM):
