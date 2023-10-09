@@ -12,7 +12,7 @@ def scrape_offers(request, SYM):
 def scrape_details(request, SYM):
     # ref = "162XCHZ"
     # return request["get"]["ref"]
-    return SYM.app('pe').scrape_job_details(request["get"]["ref"])
+    return SYM.app('pe').scrape_job_details(request["folder"][0])
 
 def get_company_info(request, SYM):
     # company_name = "Di Micheli Ristorante"
