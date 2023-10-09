@@ -20,3 +20,5 @@ python-dotenv
 jstyleson
 random_word
 db-sqlite3
+bs4
+googlemaps
