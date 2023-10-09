@@ -4,7 +4,21 @@ import googlemaps
 import os
 # from dotenv import load_dotenv
 
-
+def test(url):
+    response = requests.get(url)
+    html = response.text
+    soup = BeautifulSoup(html, "html.parser")
+    result = {"results": []}
+    for title in soup.find_all("h2", class_="media-heading"):
+        res = {}
+        res["job_title"] = title.text
+        res["job_reference"] = title.get("data-intitule-offre")
+        
+        result["results"].append(res)
+    next_20 = soup.find("a", class_="btn btn-primary")
+    if next_20:
+        result["next_20"] = next_20.get("href")
+    return result
 """scrape data from website and return a json file with the results"""
 def scrape_job_offers(url):
     response = requests.get(url)
