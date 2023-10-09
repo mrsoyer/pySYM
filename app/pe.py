@@ -72,7 +72,7 @@ def get_company_info(company_name, city):
 
         return {
             "company_name": name,
-            'adresss': address,
+            'adress': address,
             'website': website,
             "phone": phone,
             'lat': lat,
