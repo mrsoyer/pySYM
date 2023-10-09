@@ -36,6 +36,19 @@ def scrape_job_offers(url):
         result["next_20"] = next_20.get("href")
     return result
 
+"""get all the job's titles and references from the url"""
+def get_all_job_titles_and_references(url):
+    result = {"results": []}
+    data = scrape_job_offers(url)
+    while data["next_20"]:
+        for job in data["results"]:
+            result["results"].append(job)
+        if data["next_20"] != "#":
+            next = "https://candidat.pole-emploi.fr" + data["next_20"]
+            data = scrape_job_offers(next)
+        else:
+            return result
+
 """scrape job's details from the job's reference"""
 def scrape_job_details(ref):
     url = "https://candidat.pole-emploi.fr/offres/recherche/detail/"
