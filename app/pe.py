@@ -1,8 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-import googlemaps
-import os
-# from dotenv import load_dotenv
 
 def test(url):
     response = requests.get(url)
@@ -19,22 +16,31 @@ def test(url):
     if next_20:
         result["next_20"] = next_20.get("href")
     return result
+
+
 """scrape data from website and return a json file with the results"""
 def scrape_job_offers(url):
     response = requests.get(url)
     html = response.text
     soup = BeautifulSoup(html, "html.parser")
     result = {"results": []}
-    for title in soup.find_all("h2", class_="media-heading"):
+
+    for title in soup.find_all("li", class_="result"):
         res = {}
-        res["job_title"] = title.text
-        res["job_reference"] = title.get("data-intitule-offre")
-        
-        result["results"].append(res)
+        res["job_title"] = title.find("h2", class_="media-heading").text
+        res["job_reference"] = title.find("h2", class_="media-heading").get("data-intitule-offre")
+        """get company name"""
+        cname = title.find("p", class_="subtext")
+        if len(cname) > 1:
+            # name = cname.contents[0].strip()
+            # res["company_name"] = name
+            result["results"].append(res)
+
     next_20 = soup.find("a", class_="btn btn-primary")
     if next_20:
         result["next_20"] = next_20.get("href")
     return result
+
 
 """get all the job's titles and references from the url"""
 def get_all_job_titles_and_references(url):
@@ -49,6 +55,7 @@ def get_all_job_titles_and_references(url):
         else:
             return result
 
+
 """scrape job's details from the job's reference"""
 def scrape_job_details(ref):
     url = "https://candidat.pole-emploi.fr/offres/recherche/detail/"
@@ -60,8 +67,12 @@ def scrape_job_details(ref):
 
     result["ref"] = ref    
     company = soup.find("div", class_="media-body")
-    result["company_name"] = company.find("h3").text.replace("\n", "")
-    result["company_size"] = company.find("p").text.replace("\n", "")
+    if company.find("h3"):
+        result["company_name"] = company.find("h3").text.replace("\n", "")
+    if company.find("p"):
+        result["company_size"] = company.find("p").text.replace("\n", "")
+    else:
+        result["company_size"] = "not available"
     for element in soup.find_all(itemprop="address"):
         result["company_city"] = element.find(itemprop="addressLocality").get('content')
         result["company_postal_code"] = element.find(itemprop="postalCode").get('content')
@@ -71,39 +82,11 @@ def scrape_job_details(ref):
     result["description"] = soup.find("div", class_="description").text.replace("\n", "")
     result["experience"] = soup.find(itemprop="experienceRequirements").text.replace("\n", "")
     result["skills_list"] = []
-    for skills in soup.find_all("ul", class_="skill-list list-unstyled"):
-        result["skills_list"].append(skills.text)
+    for skill in soup.find_all("ul", class_="skill-list list-unstyled"):
+            result["skills_list"].append(skill.text)
+    result["skills_list"].pop(0)
     for element in soup.find_all("div", class_="description-aside"):
         result["contract_type"] = element.find("dd").text.replace("\n", "")
         result["hours"] = element.find(itemprop="workHours").text.replace("\n", "")
         result["salary"] = element.find("li").text.replace("\n", "")
     return result
-
-"""get company info from google maps"""
-def get_company_info(company_name, city):
-    GMAPS_API_KEY = os.getenv("GMAPS_API_KEY")
-    gmaps = googlemaps.Client(key=GMAPS_API_KEY)
-    place_results = gmaps.places(query=f"{company_name} {city}")
-
-    if place_results['status'] == 'OK' and len(place_results['results']) > 0:
-        place = place_results['results'][0]
-
-        place_details = gmaps.place(place_id=place['place_id'], fields=['website', 'formatted_phone_number', 'formatted_address', 'geometry', 'name'])
-        if place_details['status'] == 'OK':
-            name = place_details['result'].get('name', 'not available')
-            address = place_details['result'].get('formatted_address', 'not available')
-            website = place_details['result'].get('website', "not available")
-            phone = place_details['result'].get('formatted_phone_number', "not available")
-            lat = place_details['result']['geometry']['location']['lat']
-            lng = place_details['result']['geometry']['location']['lng']
-
-        return {
-            "company_name": name,
-            'adress': address,
-            'website': website,
-            "phone": phone,
-            'lat': lat,
-            'lng': lng
-        }
-    else:
-        return None
