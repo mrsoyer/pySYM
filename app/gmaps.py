@@ -1,6 +1,7 @@
 import os
 import googlemaps
 
+
 """get company info from google maps"""
 def get_company_info(company_name, city):
     GMAPS_API_KEY = os.getenv("GMAPS_API_KEY")
@@ -21,7 +22,7 @@ def get_company_info(company_name, city):
 
         return {
             "company_name": name,
-            'adress': address,
+            'address': address,
             'website': website,
             "phone": phone,
             'lat': lat,
