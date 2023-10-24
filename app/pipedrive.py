@@ -22,18 +22,25 @@ def connect():
 
 
 """create a new person in pipedrive if not exist"""
-def create_person(name, city, address, website, phone):
+def create_person(name, location, address, website, phone):
 
      TOKEN, PIPEDRIVE_BASE_URL = connect()
      url = PIPEDRIVE_BASE_URL + "persons"
-     data = {
+
+     data = json.dumps({
           "name": name,
-          # "city": city,
-          # "address": address,
-          # "website": website,
+          "f529556ddc06ec8ce52f1a2cbe502367921738d1": location,
+           "039d8f751c8b4afb601dcb13dd8e0f0a19de6137": address,
+          "84f8e17644ad611c0c469925f73c1db534d586be": website,
           "phone": phone
+     })
+
+     headers = {
+     'Content-Type': 'application/json',
+     'Accept': 'application/json'
      }
-     response = requests.post(url, params=TOKEN, data=data)
+     
+     response = requests.post(url, params=TOKEN, data=data, headers=headers)
      return response.json()
 
 

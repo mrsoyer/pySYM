@@ -78,13 +78,19 @@ def scrape_job_details(ref):
         result["company_postal_code"] = element.find(itemprop="postalCode").get('content')
         result["company_region"] = element.find(itemprop="addressRegion").get('content')
         result["company_country"] = element.find(itemprop="addressCountry").get('content')
-    
-    result["description"] = soup.find("div", class_="description").text.replace("\n", "")
-    result["experience"] = soup.find(itemprop="experienceRequirements").text.replace("\n", "")
+    if soup.find("div", class_="description") != None:
+        result["description"] = soup.find("div", class_="description").text.replace("\n", "")
+    else:
+        result["description"] = "No description"
+    if soup.find(itemprop="experienceRequirements") != None:
+        result["experience"] = soup.find(itemprop="experienceRequirements").text.replace("\n", "")
+    else:
+        result["experience"] = "No experience required"
     result["skills_list"] = []
     for skill in soup.find_all("ul", class_="skill-list list-unstyled"):
             result["skills_list"].append(skill.text)
-    result["skills_list"].pop(0)
+    if len(result["skills_list"]) > 0:
+        result["skills_list"].pop(0)
     for element in soup.find_all("div", class_="description-aside"):
         result["contract_type"] = element.find("dd").text.replace("\n", "")
         result["hours"] = element.find(itemprop="workHours").text.replace("\n", "")
