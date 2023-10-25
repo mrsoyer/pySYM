@@ -23,4 +23,4 @@ db-sqlite3
 bs4
 googlemaps
 apify-client
-requests
+requests==2.28.2
