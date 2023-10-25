@@ -2,7 +2,7 @@ import json
 import jstyleson
 import requests
 import os
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 
 def reademploye():
      
@@ -12,7 +12,7 @@ def reademploye():
 
 """connect to the pipedrive api"""
 def connect():
-     # load_dotenv()
+     load_dotenv()
      PIPEDRIVE_API_KEY = os.getenv("PIPEDRIVE_API_KEY")
      TOKEN = {
           "api_token": PIPEDRIVE_API_KEY
@@ -25,7 +25,7 @@ def connect():
 def create_person(name, location, address, website, phone):
 
      TOKEN, PIPEDRIVE_BASE_URL = connect()
-     url = PIPEDRIVE_BASE_URL + "persons?api_token=" + TOKEN['api_token']
+     url = PIPEDRIVE_BASE_URL + "persons"
 
      data = json.dumps({
           "name": name,
@@ -34,21 +34,15 @@ def create_person(name, location, address, website, phone):
           "84f8e17644ad611c0c469925f73c1db534d586be": website,
           "phone": phone
      })
-     print(data)
-     print(url)
-     print(TOKEN)
+
      headers = {
+     'Authorization': f'Bearer {TOKEN}',
      'Content-Type': 'application/json',
      'Accept': 'application/json'
      }
      
      response = requests.post(url, data=data, headers=headers)
      return response.json()
-     # return {
-     #      "data": data,
-     #      "url": url,
-     #      "TOKEN": TOKEN,
-     # }
 
 
 """create a lead in pipedrive"""
