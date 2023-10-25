@@ -5,7 +5,7 @@ import os
 
 # APIFY_BASE_URL = os.getenv("APIFY_BASE_URL")
 
-def test():
+def run_apify():
   APIFY_API_KEY = os.getenv("APIFY_API")
   print(APIFY_API_KEY)
   TEST = os.getenv("TEST")
@@ -21,6 +21,15 @@ def test():
     "startUrls": [
       {
         "url": "https://fr.indeed.com/emplois?q=1%C2%A0000+€&l=marseille+%2813%29&sc=0bf%3Aexrec%28%29%2Ckf%3Acmpsec%28W2F4E%29%3B&fromage=1&vjk=990ae538c5108862"
+      },
+      {
+          "url": "https://fr.indeed.com/emplois?q=1%C2%A0000+€&l=marseille+%2813%29&sc=0bf%3Aexrec%28%29%2Ckf%3Acmpsec%28X42V4%29%3B&fromage=1&vjk=d98f9b58e26e839d"
+      },
+      {
+          "url": "https://fr.indeed.com/emplois?q=1%C2%A0000+€&l=marseille+%2813%29&sc=0bf%3Aexrec%28%29%2Ckf%3Acmpsec%28CPGHF%29%3B&fromage=1&vjk=b798da917d0e2454"
+      },
+      {
+          "url": "https://fr.indeed.com/emplois?q=1%C2%A0000+%E2%82%AC&l=marseille+%2813%29&sc=0bf%3Aexrec%28%29%2Ckf%3Acmpsec%28ZYCW4%29%3B&fromage=1&vjk=4e56e63d54212219"
       }
     ]
   })
@@ -40,3 +49,17 @@ def scrape_job_offers(id_dataset):
   url = "https://api.apify.com/v2/datasets/" + id_dataset + "/items?format=json&clean=1&token=" + APIFY_API_KEY
   response = requests.get(url)
   return response.json()
+
+
+
+
+
+
+
+# {
+#     "userId": {{userId}},
+#     "createdAt": {{createdAt}},
+#     "eventType": {{eventType}},
+#     "eventData": {{eventData}},
+#     "resource": {{resource}}
+# }
