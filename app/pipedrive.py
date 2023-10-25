@@ -43,12 +43,12 @@ def create_person(name, location, address, website, phone):
      }
      
      response = requests.post(url, data=data, headers=headers)
-     # return response.json()
-     return {
-          "data": data,
-          "url": url,
-          "TOKEN": TOKEN,
-     }
+     return response.json()
+     # return {
+     #      "data": data,
+     #      "url": url,
+     #      "TOKEN": TOKEN,
+     # }
 
 
 """create a lead in pipedrive"""
