@@ -52,8 +52,7 @@ def scrape_job_offers(id_dataset):
 
 
 def test():
-  API_KEY = os.getenv("PIPEDRIVE_API_KEY")
-  TOKEN = API_KEY["api_token"]
+  TOKEN = os.getenv("PIPEDRIVE_API_KEY")
   url = f"https://api.pipedrive.com/v1/persons?api_token={TOKEN}"
 
   payload = json.dumps({
