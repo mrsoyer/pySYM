@@ -2,7 +2,7 @@ import json
 import jstyleson
 import requests
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 def reademploye():
      
@@ -12,7 +12,7 @@ def reademploye():
 
 """connect to the pipedrive api"""
 def connect():
-     load_dotenv()
+     # load_dotenv()
      PIPEDRIVE_API_KEY = os.getenv("PIPEDRIVE_API_KEY")
      TOKEN = {
           "api_token": PIPEDRIVE_API_KEY

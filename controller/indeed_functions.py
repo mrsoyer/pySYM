@@ -82,3 +82,7 @@ def wf_2(request, SYM):
         """update the job offer with the note_id in database"""
         SYM.app('postgre').update_indeed_note_id(note_id, job[0])
     return "done"
+
+
+def test(request, SYM):
+    return SYM.app('indeed').test()
