@@ -37,8 +37,7 @@ def create_person(name, location, address, website, phone):
 
      headers = {
      'Authorization': f'Bearer {PIPEDRIVE_API_KEY}',
-     'Content-Type': 'application/json',
-     'Accept': 'application/json'
+     'Content-Type': 'application/json'
      }
      
      response = requests.post(url, data=data, headers=headers)
