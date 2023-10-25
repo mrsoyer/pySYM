@@ -25,7 +25,7 @@ def connect():
 def create_person(name, location, address, website, phone):
 
      TOKEN, PIPEDRIVE_BASE_URL = connect()
-     url = PIPEDRIVE_BASE_URL + "persons"
+     url = PIPEDRIVE_BASE_URL + "persons?api_token=" + TOKEN['api_token']
 
      data = json.dumps({
           "name": name,
@@ -42,7 +42,7 @@ def create_person(name, location, address, website, phone):
      'Accept': 'application/json'
      }
      
-     response = requests.post(url, params=TOKEN, data=data, headers=headers)
+     response = requests.post(url, data=data, headers=headers)
      # return response.json()
      return {
           "data": data,
