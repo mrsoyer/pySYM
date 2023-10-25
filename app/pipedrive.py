@@ -14,17 +14,17 @@ def reademploye():
 def connect():
      # load_dotenv()
      PIPEDRIVE_API_KEY = os.getenv("PIPEDRIVE_API_KEY")
-     # TOKEN = {
-     #      "api_token": PIPEDRIVE_API_KEY
-     # }
+     TOKEN = {
+          "api_token": PIPEDRIVE_API_KEY
+     }
      PIPEDRIVE_BASE_URL = os.getenv("PIPEDRIVE_BASE_URL")
-     return PIPEDRIVE_API_KEY, PIPEDRIVE_BASE_URL
+     return TOKEN, PIPEDRIVE_BASE_URL
 
 
 """create a new person in pipedrive if not exist"""
 def create_person(name, location, address, website, phone):
 
-     PIPEDRIVE_API_KEY, PIPEDRIVE_BASE_URL = connect()
+     TOKEN, PIPEDRIVE_BASE_URL = connect()
      url = PIPEDRIVE_BASE_URL + "persons"
 
      data = json.dumps({
@@ -36,11 +36,11 @@ def create_person(name, location, address, website, phone):
      })
 
      headers = {
-     'Authorization': f'Bearer {PIPEDRIVE_API_KEY}',
+     'Authorization': f'Bearer {TOKEN["api_token"]}',
      'Content-Type': 'application/json'
      }
      
-     response = requests.post(url, data=data, headers=headers)
+     response = requests.post(url, data=data, headers=headers, params=TOKEN)
      return response.json()
 
 
