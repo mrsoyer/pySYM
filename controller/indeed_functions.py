@@ -7,8 +7,6 @@ def scrape_offers(request, SYM):
 def run_apify(request, SYM):
     return SYM.app('indeed').run_apify()
 
-def test(request, SYM):
-    return SYM.app('indeed').scrape_job_offers(request["body"]["defaultDatasetId"])
 
 """save all the job offers in the database"""
 def save_all_job_offers_and_companies(request, SYM):

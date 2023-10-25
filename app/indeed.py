@@ -49,17 +49,3 @@ def scrape_job_offers(id_dataset):
   url = "https://api.apify.com/v2/datasets/" + id_dataset + "/items?format=json&clean=1&token=" + APIFY_API_KEY
   response = requests.get(url)
   return response.json()
-
-
-
-
-
-
-
-# {
-#     "userId": {{userId}},
-#     "createdAt": {{createdAt}},
-#     "eventType": {{eventType}},
-#     "eventData": {{eventData}},
-#     "resource": {{resource}}
-# }
