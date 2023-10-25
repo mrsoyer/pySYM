@@ -114,7 +114,7 @@ def get_all_pe_companies():
 def get_pe_companies_with_no_pipedrive_id():
      conn = connect()
      cur = conn.cursor()
-     cur.execute("SELECT * FROM sym.pe_company WHERE pipedrive_id IS NULL AND company_details = true LIMIT 50")
+     cur.execute("SELECT * FROM sym.pe_company WHERE pipedrive_id IS NULL AND company_details = true LIMIT 10")
      rows = cur.fetchall()
      conn.close()
      return rows
@@ -124,7 +124,7 @@ def get_pe_companies_with_no_pipedrive_id():
 def get_pe_job_offers_with_no_note_id():
      conn = connect()
      cur = conn.cursor()
-     cur.execute("SELECT * FROM sym.pe_job_offer WHERE note_id IS NULL AND company_id IN (SELECT company_id FROM sym.pe_company WHERE pipedrive_id IS NOT NULL) LIMIT 50")
+     cur.execute("SELECT * FROM sym.pe_job_offer WHERE note_id IS NULL AND company_id IN (SELECT company_id FROM sym.pe_company WHERE pipedrive_id IS NOT NULL) LIMIT 10")
      rows = cur.fetchall()
      conn.close()
      return rows
@@ -216,7 +216,7 @@ def update_indeed_company(company_id, address, website, phone, lat, lng):
 def get_indeed_companies_with_no_pipedrive_id():
      conn = connect()
      cur = conn.cursor()
-     cur.execute("SELECT * FROM sym.indeed_company WHERE pipedrive_id IS NULL AND company_details = true LIMIT 50")
+     cur.execute("SELECT * FROM sym.indeed_company WHERE pipedrive_id IS NULL AND company_details = true LIMIT 10")
      rows = cur.fetchall()
      conn.close()
      return rows
@@ -263,7 +263,7 @@ def update_indeed_note_id(note_id, id):
 def get_indeed_job_offers_with_no_note_id():
      conn = connect()
      cur = conn.cursor()
-     cur.execute("SELECT * FROM sym.indeed_job_offer WHERE note_id IS NULL AND company_id IN (SELECT company_id FROM sym.indeed_company WHERE pipedrive_id IS NOT NULL) LIMIT 50")
+     cur.execute("SELECT * FROM sym.indeed_job_offer WHERE note_id IS NULL AND company_id IN (SELECT company_id FROM sym.indeed_company WHERE pipedrive_id IS NOT NULL) LIMIT 10")
      rows = cur.fetchall()
      conn.close()
      return rows

@@ -3,8 +3,6 @@ import json
 import os
 
 
-# APIFY_BASE_URL = os.getenv("APIFY_BASE_URL")
-
 def run_apify():
   APIFY_API_KEY = os.getenv("APIFY_API")
   print(APIFY_API_KEY)
@@ -49,25 +47,3 @@ def scrape_job_offers(id_dataset):
   url = "https://api.apify.com/v2/datasets/" + id_dataset + "/items?format=json&clean=1&token=" + APIFY_API_KEY
   response = requests.get(url)
   return response.json()
-
-
-def test():
-  TOKEN = os.getenv("PIPEDRIVE_API_KEY")
-  url = f"https://api.pipedrive.com/v1/persons?api_token={TOKEN}"
-  print("url", url)
-
-  payload = json.dumps({
-    "name": "SOLIHA PROVENCE",
-    "f529556ddc06ec8ce52f1a2cbe502367921738d1": "Marseille",
-    "039d8f751c8b4afb601dcb13dd8e0f0a19de6137": "l'Aqueduc, 10 Rue Marc Donadille, 13013 Marseille, France",
-    "84f8e17644ad611c0c469925f73c1db534d586be": "http://www.solihaprovence.fr/",
-    "phone": "04 91 11 63 10"
-  })
-  headers = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json'
-    }
-
-  response = requests.request("POST", url, headers=headers, data=payload)
-
-  print(response.text)
