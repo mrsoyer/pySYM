@@ -6,10 +6,7 @@ import os
 def run_apify():
   APIFY_API_KEY = os.getenv("APIFY_API")
   print(APIFY_API_KEY)
-  TEST = os.getenv("TEST")
-  print(TEST)
   url = "https://api.apify.com/v2/acts/misceres~indeed-scraper/runs?token=" + APIFY_API_KEY
-  print(url)
 
   payload = json.dumps({
     "country": "FR",

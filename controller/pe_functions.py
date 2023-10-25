@@ -79,7 +79,6 @@ def wf_1(request, SYM):
             continue
         """create person in pipedrive"""
         person = SYM.app('pipedrive').create_person(company[1], company[2], company[3], company[4], company[5])
-        print("person = ", person)
         """get person id from pipedrive"""
         pipedrive_id = person["data"]["id"]
         lead = SYM.app('pipedrive').create_lead(company[1], pipedrive_id)
