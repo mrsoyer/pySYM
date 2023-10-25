@@ -34,7 +34,9 @@ def create_person(name, location, address, website, phone):
           "84f8e17644ad611c0c469925f73c1db534d586be": website,
           "phone": phone
      })
-
+     print(data)
+     print(url)
+     print(TOKEN)
      headers = {
      'Content-Type': 'application/json',
      'Accept': 'application/json'
