@@ -4,12 +4,6 @@ import psycopg2
 import os
 
 
-def test():
-     
-     print("test")
-     return("test")
-
-
 """connect to the postgre database"""
 def connect():
      DB_URL = os.getenv("DATABASE_URL")
@@ -267,3 +261,96 @@ def get_indeed_job_offers_with_no_note_id():
      rows = cur.fetchall()
      conn.close()
      return rows
+
+
+"""read Account table join with Business table"""
+def read_account_business():
+     conn = connect()
+     cur = conn.cursor()
+     cur.execute('SELECT public."Account".id, public."Account".email, public."Account"."createdAt" , public."Account"."firstName", public."Account"."lastName", public."Account".gender, public."Business".id, public."Business"."createdAt", public."Business".siret, public."Business"."addressCity", public."Business"."addressStreet", public."Business"."addressZipCode", public."Business"."companyName", public."Business".description, public."Business".function, public."Business".phone, public."Business"."businessType", public."Business"."pipedrivePersonId" \
+          FROM public."Account" JOIN public."Business" ON public."Account".id = public."Business"."accountId"')
+     rows = cur.fetchall()
+     conn.close()
+     return rows
+
+
+"""select and read Account table join with Business table row where pipedrivePersonId = pipedrivePersonID"""
+def read_account_business_from_pipedriveID(pipedrivePersonID):
+     conn = connect()
+     cur = conn.cursor()
+     cur.execute('SELECT public."Account".id, public."Account".email, public."Account"."createdAt" , public."Account"."firstName", public."Account"."lastName", public."Account".gender, public."Business".id, public."Business"."createdAt", public."Business".siret, public."Business"."addressCity", public."Business"."addressStreet", public."Business"."addressZipCode", public."Business"."companyName", public."Business".description, public."Business".function, public."Business".phone, public."Business"."businessType", public."Business"."pipedrivePersonId" \
+          FROM public."Account" JOIN public."Business" ON public."Account".id = public."Business"."accountId"\
+          WHERE public."Business"."pipedrivePersonId" = %s', (str(pipedrivePersonID),))
+     rows = cur.fetchall()
+     conn.close()
+     return rows
+
+
+"""select and read Account table join with Business table row where email = email"""
+def read_account_business_from_email(email):
+     conn = connect()
+     cur = conn.cursor()
+     cur.execute('SELECT public."Account".id, public."Account".email, public."Account"."createdAt" , public."Account"."firstName", public."Account"."lastName", public."Account".gender, public."Business".id, public."Business"."createdAt", public."Business".siret, public."Business"."addressCity", public."Business"."addressStreet", public."Business"."addressZipCode", public."Business"."companyName", public."Business".description, public."Business".function, public."Business".phone, public."Business"."businessType", public."Business"."pipedrivePersonId" \
+          FROM public."Account" JOIN public."Business" ON public."Account".id = public."Business"."accountId"\
+          WHERE public."Account".email = %s', (str(email),))
+     rows = cur.fetchall()
+     conn.close()
+     return rows
+
+
+"""select and read Account table join with Business table row where phone = phone"""
+def read_account_business_from_phone(phone):
+     conn = connect()
+     cur = conn.cursor()
+     cur.execute('SELECT public."Account".id, public."Account".email, public."Account"."createdAt" , public."Account"."firstName", public."Account"."lastName", public."Account".gender, public."Business".id, public."Business"."createdAt", public."Business".siret, public."Business"."addressCity", public."Business"."addressStreet", public."Business"."addressZipCode", public."Business"."companyName", public."Business".description, public."Business".function, public."Business".phone, public."Business"."businessType", public."Business"."pipedrivePersonId" \
+          FROM public."Account" JOIN public."Business" ON public."Account".id = public."Business"."accountId"\
+          WHERE public."Business".phone = %s', (str(phone),))
+     rows = cur.fetchall()
+     conn.close()
+     return rows
+
+
+
+"""insert deal id in dont_find table"""
+def insert_dont_find_deal_id(deal_id):
+     conn = connect()
+     cur = conn.cursor()
+     cur.execute("INSERT INTO sym.dont_find (deal_id) VALUES (%s)", (deal_id,))
+     conn.commit()
+     conn.close()
+
+
+"""insert deal id in problem table"""
+def insert_problem_deal_id(deal_id):
+     conn = connect()
+     cur = conn.cursor()
+     cur.execute("INSERT INTO sym.problem (deal_id) VALUES (%s)", (deal_id,))
+     conn.commit()
+     conn.close()
+
+
+"""insert account id and pipedrive id in link account_person table"""
+def insert_link_account(account_id, pipedrive_id):
+     conn = connect()
+     cur = conn.cursor()
+     cur.execute("INSERT INTO sym.link_account_person (account_id, pipedrive_id) VALUES (%s, %s)", (account_id, pipedrive_id))
+     conn.commit()
+     conn.close()
+
+
+"""insert business id and pipedrive id in link business_company table"""
+def insert_link_business(business_id, pipedrive_id):
+     conn = connect()
+     cur = conn.cursor()
+     cur.execute("INSERT INTO sym.link_business_company (business_id, pipedrive_id) VALUES (%s, %s)", (business_id, pipedrive_id))
+     conn.commit()
+     conn.close()
+
+
+"""insert business id, deal id and pipeline name in link business_deal table"""
+def insert_link_business_deal(business_id, deal_id, pipeline_name):
+     conn = connect()
+     cur = conn.cursor()
+     cur.execute("INSERT INTO sym.link_business_deal (business_id, deal_id, pipeline_name) VALUES (%s, %s, %s)", (business_id, deal_id, pipeline_name))
+     conn.commit()
+     conn.close()

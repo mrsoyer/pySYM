@@ -81,7 +81,9 @@ def wf_1(request, SYM):
         person = SYM.app('pipedrive').create_person(company[1], company[2], company[3], company[4], company[5])
         """get person id from pipedrive"""
         pipedrive_id = person["data"]["id"]
-        lead = SYM.app('pipedrive').create_lead(company[1], pipedrive_id)
+        """create a lead in pipedrive"""
+        pe_label = "8f7d64b0-57b9-11ee-9d7c-b375ab877442"
+        lead = SYM.app('pipedrive').create_lead(company[1], pipedrive_id, pe_label)
         lead_id = lead["data"]["id"]
         SYM.app('postgre').update_pe_pipedrive_id(pipedrive_id, company[0])
         SYM.app("postgre").update_pe_lead_id(lead_id, company[0])

@@ -44,6 +44,7 @@ def update_company(request, SYM):
 def wf_1(request, SYM):
     """get companies which have no pipedrive_id from database"""
     data_postgre = SYM.app('postgre').get_indeed_companies_with_no_pipedrive_id()
+    print("data_postgre: ", data_postgre)
 
     for company in data_postgre:
         """check if the company has not a phone number, skip it"""
@@ -51,13 +52,18 @@ def wf_1(request, SYM):
             continue
         """create a person in pipedrive"""
         person = SYM.app('pipedrive').create_person(company[1], company[2], company[3], company[4], company[5])
+        print("person: ", person)
         person_id = person["data"]["id"]
         """create a lead in pipedrive"""
-        lead = SYM.app('pipedrive').create_lead("job offer", person["data"]["id"])
+        indeed_label = "c55790b0-57c8-11ee-86c1-37018efb0033"
+        lead = SYM.app('pipedrive').create_lead(company[1], person["data"]["id"], indeed_label)
+        print("lead: ", lead)
         lead_id = lead["data"]["id"]
         """update the company with the pipedrive_id and lead_id in database"""
         SYM.app('postgre').update_indeed_pipedrive_id(person_id, company[0])
         SYM.app('postgre').update_indeed_lead_id(lead_id, company[0])
+
+        break
     return "done"
 
 
@@ -83,5 +89,13 @@ def wf_2(request, SYM):
     return "done"
 
 
-def test(request, SYM):
-    return SYM.app('indeed').test()
+
+def test_lead(request, SYM):
+    louis = 18447689
+    rayane = 18447700
+    a = 776
+    pe = "8f7d64b0-57b9-11ee-9d7c-b375ab877442"
+    indeed = "c55790b0-57c8-11ee-86c1-37018efb0033"
+
+    deals = SYM.app('pipedrive').create_lead("test", a, indeed)
+    return deals

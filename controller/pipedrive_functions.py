@@ -1,0 +1,154 @@
+import re
+import pandas as pd
+
+
+
+def cleanedField(request, SYM):
+    return SYM.app('pipedrive').update_deal_cleanedField(1)
+
+
+def get_deals_notCleaned(request, SYM):
+    return SYM.app('pipedrive').get_deals_notCleaned()
+
+
+def get_deal(request, SYM):
+    return SYM.app('pipedrive').get_deal_related_objects(1)
+
+
+
+def clean(request, SYM):
+    deals = SYM.app('pipedrive').get_deals_notCleaned()
+    for deal in deals:
+        print("deal: ", deal)
+        deal_id = deal['id']
+        deal_related_objects = SYM.app('pipedrive').get_deal_related_objects(deal_id)
+        deal_person = deal_related_objects["person"]
+        person_id = deal['person_id']['value']
+        company_id = deal['org_id']['value']
+        deal_company = deal_related_objects["organization"]
+        comp_keys = list(deal_company.keys())
+        company_members = deal_company[comp_keys[0]]["people_count"]
+        data = ""
+        deal_pipeline =deal_related_objects["pipeline"]
+        pipe_keys = list(deal_pipeline.keys())
+        pipe_name = deal_pipeline[pipe_keys[0]]["name"]
+
+        # company_members = SYM.app('pipedrive').get_organization_details(company_id)["people_count"]
+
+        if len(deal['person_id']['phone']) > 1:
+            deal_phone = [x['value'] for x in deal['person_id']['phone']]
+        else:
+            deal_phone = deal['person_id']['phone'][0]['value']
+        print("deal_phone: ", deal_phone)
+        if len(deal['person_id']['email']) > 1:
+            deal_email = [x['value'] for x in deal['person_id']['email']]
+        else:
+            deal_email = deal['person_id']['email'][0]['value']
+        print("deal_email: ", deal_email)
+
+        print("company_members: ", company_members)
+
+        if len(deal_person) > 1 or len(deal_company) > 1 or company_members > 2:
+            """insert problem deal_id"""
+            SYM.app('postgre').insert_problem_deal_id(deal_id)
+        
+        elif SYM.app('postgre').read_account_business_from_pipedriveID(deal_id) != []:
+            data = SYM.app('postgre').read_account_business_from_pipedriveID(deal_id)[0]
+            """update pipe_business"""
+            SYM.app('pipedrive').update_person_from_account_business(person_id, data)
+            SYM.app('pipedrive').update_organization_from_account_business(company_id, data)
+            SYM.app('postgre').insert_link_account(data[0], person_id)
+            SYM.app('postgre').insert_link_business(data[6], company_id)
+            SYM.app('postgre').insert_link_business_deal(data[6], deal_id, pipe_name)
+
+        elif deal_email:
+            if type(deal_email) != list:
+                deal_email = [deal_email]
+            print("deal_email: ", deal_email)
+            for email in deal_email:
+                if SYM.app('postgre').read_account_business_from_email(email) != []:
+                    data = SYM.app('postgre').read_account_business_from_email(email)[0]
+                    print("data: ", data)
+                    """update pipe_business"""
+                    SYM.app('pipedrive').update_person_from_account_business(person_id, data)
+                    SYM.app('pipedrive').update_organization_from_account_business(company_id, data)
+                    SYM.app('postgre').insert_link_account(data[0], person_id)
+                    SYM.app('postgre').insert_link_business(data[6], company_id)
+                    SYM.app('postgre').insert_link_business_deal(data[6], deal_id, pipe_name)
+                    break
+                else:
+                    """insert dont find deal_id"""
+                    try:
+                        SYM.app('postgre').insert_dont_find_deal_id(deal_id)
+                    except:
+                        pass
+                    data = None
+        
+        elif deal_phone:
+            
+            if type(deal_phone) != list:
+                deal_phone = [deal_phone]
+            for phone in deal_phone:
+                phone = re.sub("^0", "+33", phone)
+                print("phone: ", phone)
+                
+                if SYM.app('postgre').read_account_business_from_phone(phone) != []:
+                    data = SYM.app('postgre').read_account_business_from_phone(phone)[0]
+                    """update pipe_business"""
+                    SYM.app('pipedrive').update_person_from_account_business(person_id, data)
+                    SYM.app('pipedrive').update_organization_from_account_business(company_id, data)
+                    SYM.app('postgre').insert_link_account(data[0], person_id)
+                    SYM.app('postgre').insert_link_business(data[6], company_id)
+                    SYM.app('postgre').insert_link_business_deal(data[6], deal_id, pipe_name)
+                    break
+                else:
+                    """insert dont find deal_id"""
+                    try:
+                        SYM.app('postgre').insert_dont_find_deal_id(deal_id)
+                    except:
+                        pass
+                    data = None
+
+        else:
+            """insert dont find deal_id"""
+            try:
+                SYM.app('postgre').insert_dont_find_deal_id(deal_id)
+            except:
+                pass
+
+        print("deal_id: ", deal_id)
+        print("deal_person: ", deal_person)
+        print("deal_company: ", deal_company)
+        print("person_id: ", person_id)
+        print("company_id: ", company_id)
+        print("data: ", data)
+
+        SYM.app('pipedrive').update_deal_cleanedField(deal_id)
+
+    return "done"
+
+
+def test(request, SYM):
+    deals = SYM.app('pipedrive').get_all_deals()
+
+    deal_list = []
+    for deal in deals:
+        # print("deal: ", deal)
+        # break
+        deal_list.append({
+            "id": deal["id"],
+            "title": deal["title"],
+            "value": deal["value"],
+            "currency": deal["currency"],
+        })
+    df = pd.DataFrame(deal_list)
+    duplicates = df[df.duplicated(['title', 'value', 'currency'], keep=False)]
+
+    if duplicates.empty:
+        print("no duplicate")
+        return "no duplicate"
+    else:
+        print(duplicates)
+        return duplicates.to_json()
+    
+    # return "done"
