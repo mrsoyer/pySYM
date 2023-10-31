@@ -263,6 +263,7 @@ def get_indeed_job_offers_with_no_note_id():
      return rows
 
 
+# FOLLOWING FUNCTIONS ARE FOR LINK TABLES, DONT_FIND AND PROBLEM TABLES (l.268-384)
 """read Account table join with Business table"""
 def read_account_business():
      conn = connect()
@@ -310,7 +311,6 @@ def read_account_business_from_phone(phone):
      return rows
 
 
-
 """insert deal id in dont_find table"""
 def insert_dont_find_deal_id(deal_id):
      conn = connect()
@@ -321,10 +321,10 @@ def insert_dont_find_deal_id(deal_id):
 
 
 """insert deal id in problem table"""
-def insert_problem_deal_id(deal_id):
+def insert_problem_deal_id(deal_id, problem):
      conn = connect()
      cur = conn.cursor()
-     cur.execute("INSERT INTO sym.problem (deal_id) VALUES (%s)", (deal_id,))
+     cur.execute("INSERT INTO sym.problem (deal_id, description) VALUES (%s, %s)", (deal_id, problem))
      conn.commit()
      conn.close()
 
@@ -352,5 +352,33 @@ def insert_link_business_deal(business_id, deal_id, pipeline_name):
      conn = connect()
      cur = conn.cursor()
      cur.execute("INSERT INTO sym.link_business_deal (business_id, deal_id, pipeline_name) VALUES (%s, %s, %s)", (business_id, deal_id, pipeline_name))
+     conn.commit()
+     conn.close()
+
+
+"""read link business_deal table from deal_id"""
+def read_link_business_deal(deal_id):
+     conn = connect()
+     cur = conn.cursor()
+     cur.execute("SELECT * FROM sym.link_business_deal WHERE deal_id = '%s'", (deal_id,))
+     rows = cur.fetchall()
+     conn.close()
+     return rows
+
+
+"""update link business_deal table with deal_id"""
+def update_link_business_deal(deal_id, new_deal_id, new_pipeline_name):
+     conn = connect()
+     cur = conn.cursor()
+     cur.execute("UPDATE sym.link_business_deal SET deal_id = '%s', pipeline_name = %s WHERE deal_id = '%s'", (new_deal_id, new_pipeline_name, deal_id))
+     conn.commit()
+     conn.close()
+
+
+"""remove link business_deal table from deal_id"""
+def remove_link_business_deal(deal_id):
+     conn = connect()
+     cur = conn.cursor()
+     cur.execute("DELETE FROM sym.link_business_deal WHERE deal_id = '%s'", (deal_id,))
      conn.commit()
      conn.close()

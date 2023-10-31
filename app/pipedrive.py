@@ -43,8 +43,6 @@ def create_lead(title, person_id, label_id):
      url = PIPEDRIVE_BASE_URL + "leads"
      owners_list = [18447689, 18447700]
      owner_id = random.choice(owners_list)
-     print("owner_id: ", owner_id)
-
      data = {
           "title": title,
           "person_id": person_id,
@@ -158,3 +156,14 @@ def get_all_deals():
      response = requests.get(url, params=params)
      deals = response.json()["data"]
      return deals
+
+
+"""merge a deal in pipedrive"""
+def merge_deal(child_id, parent_id):
+     TOKEN, PIPEDRIVE_BASE_URL = connect()
+     url = PIPEDRIVE_BASE_URL + f"deals/{child_id}/merge"
+     data = {
+          "merge_with_id": parent_id
+     }
+     response = requests.put(url, params=TOKEN, json=data)
+     return response.json()
