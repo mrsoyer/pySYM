@@ -72,7 +72,6 @@ def update_company(request, SYM):
 def wf_1(request, SYM):
     """get companies which have no pipedrive_id from database"""
     data_postgre = SYM.app('postgre').get_pe_companies_with_no_pipedrive_id()
-    print(data_postgre)
 
     for company in data_postgre:
         """check if the company has not a phone number, skip it"""
@@ -96,7 +95,6 @@ def wf_1(request, SYM):
 def wf_2(request, SYM):
     """get job offers which have no note_id from database"""
     data_postgre = SYM.app('postgre').get_pe_job_offers_with_no_note_id()
-    print(data_postgre)
 
     for job in data_postgre:
         content = f"<b>Offre:<b> Pole Emploi <br>\
@@ -116,7 +114,11 @@ def wf_2(request, SYM):
         
         lead_id = SYM.app('postgre').get_pe_lead_id(job[14])
         lead_id = lead_id[0][0]
-        note = SYM.app('pipedrive').create_note_deal(content, lead_id)
-        note_id = note["data"]["id"]
-        SYM.app('postgre').update_pe_note_id(note_id, job[0])
+        """create a note in pipedrive"""
+        if lead_id:
+            note = SYM.app('pipedrive').create_note_deal(content, lead_id)
+            note_id = note["data"]["id"]
+            SYM.app('postgre').update_pe_note_id(note_id, job[0])
+        else:
+            SYM.app('postgre').update_pe_note_id("no lead id", job[0])
     return "done"
