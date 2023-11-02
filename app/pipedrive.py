@@ -76,7 +76,7 @@ def get_deals_notCleaned():
         "api_token": TOKEN["api_token"],
         "filter_id": 88,
         "start": 0,
-        "limit": 1,
+        "limit": 100,
     }
     response = requests.get(url, params=params)
     deals = response.json()["data"]
@@ -93,8 +93,11 @@ def get_deal_related_objects(deal_id):
      }
      response = requests.get(url, params=params)
      deal = response.json()["related_objects"]
-     deal_person = deal["person"]
-     print(len(deal_person))
+     try:
+          deal_person = deal["person"]
+          print(len(deal_person))
+     except:
+          pass
      
      return deal
 
@@ -118,9 +121,10 @@ def update_person_from_account_business(person_id, data):
 def update_organization_from_account_business(organization_id, data):
      TOKEN, PIPEDRIVE_BASE_URL = connect()
      url = PIPEDRIVE_BASE_URL + f"organizations/{organization_id}"
+     address = "%s, %s, %s" % (data[10], data[9], data[11])
      data = {
           "name": data[12],
-          "address": data[10] + ", " + data[9] + ", " + data[11],
+          "address": address,
           "34bb6f62585df8ad42cf3ac70359fe88a15cc404": data[9],
           "address_route": data[10],
           "address_country": "France",

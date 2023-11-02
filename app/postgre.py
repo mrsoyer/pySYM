@@ -366,6 +366,16 @@ def read_link_business_deal(deal_id):
      return rows
 
 
+"""read link business_deal table from business_id"""
+def read_link_business_deal_from_business_id(business_id):
+     conn = connect()
+     cur = conn.cursor()
+     cur.execute("SELECT * FROM sym.link_business_deal WHERE business_id = %s", (business_id,))
+     rows = cur.fetchall()
+     conn.close()
+     return rows
+
+
 """update link business_deal table with deal_id"""
 def update_link_business_deal(deal_id, new_deal_id, new_pipeline_name):
      conn = connect()

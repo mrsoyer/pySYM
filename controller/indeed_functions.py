@@ -44,10 +44,11 @@ def update_company(request, SYM):
 def wf_1(request, SYM):
     """get companies which have no pipedrive_id from database"""
     data_postgre = SYM.app('postgre').get_indeed_companies_with_no_pipedrive_id()
-
+    
     for company in data_postgre:
         """check if the company has not a phone number, skip it"""
         if company[5] == "not available":
+            SYM.app('postgre').update_indeed_pipedrive_id("No Phone", company[0])
             continue
         """create a person in pipedrive"""
         person = SYM.app('pipedrive').create_person(company[1], company[2], company[3], company[4], company[5])
@@ -70,7 +71,10 @@ def wf_2(request, SYM):
     data_postgre = SYM.app('postgre').get_indeed_job_offers_with_no_note_id()
 
     for job in data_postgre:
-        content = f"<b>Poste:<b> {job[1]} / <b>Entreprise:<b> {job[4]} <br> \
+        base_url = "https://fr.indeed.com/emplois?q=1%C2%A0000+%E2%82%AC&l=marseille+%2813%29&sc=0bf%3Aexrec%28%29%2Ckf%3Acmpsec%28W2F4E%29%3B&fromage=1&vjk="
+        content = f"<b>Offre:<b> Indeed <br>\
+        <b>url: <b> {base_url}{job[0]}<br> \
+        <b>Poste:<b> {job[1]} / <b>Entreprise:<b> {job[4]} <br> \
         <b>Effectif(s):<b> {job[3]} <br> \
         <b>Localisation:<b> {job[5]} <br> \
         <b>Salaire:<b> {job[2]} <br> \

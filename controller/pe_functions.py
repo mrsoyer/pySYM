@@ -72,10 +72,12 @@ def update_company(request, SYM):
 def wf_1(request, SYM):
     """get companies which have no pipedrive_id from database"""
     data_postgre = SYM.app('postgre').get_pe_companies_with_no_pipedrive_id()
+    print(data_postgre)
 
     for company in data_postgre:
         """check if the company has not a phone number, skip it"""
         if company[5] == "not available":
+            SYM.app('postgre').update_pe_pipedrive_id("No Phone", company[0])
             continue
         """create person in pipedrive"""
         person = SYM.app('pipedrive').create_person(company[1], company[2], company[3], company[4], company[5])
@@ -94,9 +96,12 @@ def wf_1(request, SYM):
 def wf_2(request, SYM):
     """get job offers which have no note_id from database"""
     data_postgre = SYM.app('postgre').get_pe_job_offers_with_no_note_id()
+    print(data_postgre)
 
     for job in data_postgre:
-        content = f"<b>Poste:<b> {job[1]} / <b>Entreprise:<b> {job[2]} <br> \
+        content = f"<b>Offre:<b> Pole Emploi <br>\
+        <b>url:<b> https://candidat.pole-emploi.fr/offres/recherche/detail/{job[0]} <br> \
+        <b>Poste:<b> {job[1]} / <b>Entreprise:<b> {job[2]} <br> \
         <b>Effectif(s):<b> {job[3]} <br> \
         <b>Ville:<b> {job[4]} <br> \
         <b>Code Postale:<b> {job[5]} <br> \
