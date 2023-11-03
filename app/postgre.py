@@ -389,6 +389,6 @@ def update_link_business_deal(business_id, new_deal_id, new_pipeline_name):
 def remove_link_business_deal(deal_id):
      conn = connect()
      cur = conn.cursor()
-     cur.execute("DELETE FROM sym.link_business_deal WHERE deal_id = '%s'", (deal_id,))
+     cur.execute("DELETE FROM sym.link_business_deal WHERE deal_id = %s", (deal_id,))
      conn.commit()
      conn.close()

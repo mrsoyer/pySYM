@@ -123,6 +123,7 @@ def update_person_from_account_business(person_id, data):
           "last_name": data[4],
           "email": data[1],
           "fd4d53653d471c62cfe04c155130ab0684644ea6": data[5],
+          "e0a9f36c446ac035fdf89f5187843e7db5091f7c": data[0]
      }
      response = requests.put(url, params=TOKEN, json=data)
      return response.json()
@@ -145,16 +146,29 @@ def update_organization_from_account_business(organization_id, data):
           "d97a82c1373c49294be546886a2327432bdfc99a": data[14],
           "phone": data[15],
           "68602f04fa17299e33f2280fcef4f79f77b08875": data[16],
+          "01d2952f0447ccdddfd0b665af36005c2968fdf7": data[6]
      }
      response = requests.put(url, params=TOKEN, json=data)
      return response.json()
+
+
+"""update a deal business id field in pipedrive"""
+def update_deal_businessIdField(deal_id, data):
+     TOKEN, PIPEDRIVE_BASE_URL = connect()
+     url = PIPEDRIVE_BASE_URL + f"deals/{deal_id}"
+     data = {
+          "fd250491133b79461c5d7a17dbc24ccefc89113a": data[6]
+     }
+     response = requests.put(url, params=TOKEN, json=data)
+     return response.json()
+
 
 """update a deal cleaned field in pipedrive"""
 def update_deal_cleanedField(deal_id):
      TOKEN, PIPEDRIVE_BASE_URL = connect()
      url = PIPEDRIVE_BASE_URL + f"deals/{deal_id}"
      data = {
-          "de5b4b741992b57af20863c8da9277f6c18561b6": 1
+          "de5b4b741992b57af20863c8da9277f6c18561b6": 2
      }
      response = requests.put(url, params=TOKEN, json=data)
      return response.json()
@@ -179,6 +193,17 @@ def merge_deal(child_id, parent_id):
      url = PIPEDRIVE_BASE_URL + f"deals/{child_id}/merge"
      data = {
           "merge_with_id": parent_id
+     }
+     response = requests.put(url, params=TOKEN, json=data)
+     return response.json()
+
+
+"""update a deal name in pipedrive"""
+def update_deal_name(deal_id, name):
+     TOKEN, PIPEDRIVE_BASE_URL = connect()
+     url = PIPEDRIVE_BASE_URL + f"deals/{deal_id}"
+     data = {
+          "title": name
      }
      response = requests.put(url, params=TOKEN, json=data)
      return response.json()

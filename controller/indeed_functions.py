@@ -51,17 +51,19 @@ def wf_1(request, SYM):
             SYM.app('postgre').update_indeed_pipedrive_id("No Phone", company[0])
             continue
         """create a person in pipedrive"""
-        person = SYM.app('pipedrive').create_person(company[1], company[2], company[3], company[4], company[5])
-        person_id = person["data"]["id"]
-        """create a lead in pipedrive"""
-        indeed_label = "c55790b0-57c8-11ee-86c1-37018efb0033"
-        lead = SYM.app('pipedrive').create_lead(company[1], person["data"]["id"], indeed_label)
-        lead_id = lead["data"]["id"]
-        """update the company with the pipedrive_id and lead_id in database"""
-        SYM.app('postgre').update_indeed_pipedrive_id(person_id, company[0])
-        SYM.app('postgre').update_indeed_lead_id(lead_id, company[0])
+        if "Marseille" not in company[2]:
+            SYM.app('postgre').update_indeed_pipedrive_id("No Marseille", company[0])
+        else:
+            person = SYM.app('pipedrive').create_person(company[1], company[2], company[3], company[4], company[5])
+            person_id = person["data"]["id"]
+            """create a lead in pipedrive"""
+            indeed_label = "c55790b0-57c8-11ee-86c1-37018efb0033"
+            lead = SYM.app('pipedrive').create_lead(company[1], person["data"]["id"], indeed_label)
+            lead_id = lead["data"]["id"]
+            """update the company with the pipedrive_id and lead_id in database"""
+            SYM.app('postgre').update_indeed_pipedrive_id(person_id, company[0])
+            SYM.app('postgre').update_indeed_lead_id(lead_id, company[0])
 
-        break
     return "done"
 
 
@@ -84,7 +86,9 @@ def wf_2(request, SYM):
         lead_id = SYM.app('postgre').get_indeed_lead_id(job[7])
         lead_id = lead_id[0][0]
         """create a note in pipedrive"""
-        if lead_id:
+        if "Marseille" not in job[5]:
+            SYM.app('postgre').update_indeed_note_id("Not Marseille", job[0])
+        elif lead_id:
             note = SYM.app('pipedrive').create_note_deal(content, lead_id)
             note_id = note["data"]["id"]
             """update the job offer with the note_id in database"""

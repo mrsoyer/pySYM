@@ -78,16 +78,19 @@ def wf_1(request, SYM):
         if company[5] == "not available":
             SYM.app('postgre').update_pe_pipedrive_id("No Phone", company[0])
             continue
-        """create person in pipedrive"""
-        person = SYM.app('pipedrive').create_person(company[1], company[2], company[3], company[4], company[5])
-        """get person id from pipedrive"""
-        pipedrive_id = person["data"]["id"]
-        """create a lead in pipedrive"""
-        pe_label = "8f7d64b0-57b9-11ee-9d7c-b375ab877442"
-        lead = SYM.app('pipedrive').create_lead(company[1], pipedrive_id, pe_label)
-        lead_id = lead["data"]["id"]
-        SYM.app('postgre').update_pe_pipedrive_id(pipedrive_id, company[0])
-        SYM.app("postgre").update_pe_lead_id(lead_id, company[0])
+        if "Marseille" not in company[2]:
+            SYM.app('postgre').update_pe_pipedrive_id("No Marseille", company[0])
+        else:
+            """create person in pipedrive"""
+            person = SYM.app('pipedrive').create_person(company[1], company[2], company[3], company[4], company[5])
+            """get person id from pipedrive"""
+            pipedrive_id = person["data"]["id"]
+            """create a lead in pipedrive"""
+            pe_label = "8f7d64b0-57b9-11ee-9d7c-b375ab877442"
+            lead = SYM.app('pipedrive').create_lead(company[1], pipedrive_id, pe_label)
+            lead_id = lead["data"]["id"]
+            SYM.app('postgre').update_pe_pipedrive_id(pipedrive_id, company[0])
+            SYM.app("postgre").update_pe_lead_id(lead_id, company[0])
     return "done"
 
 
@@ -115,7 +118,9 @@ def wf_2(request, SYM):
         lead_id = SYM.app('postgre').get_pe_lead_id(job[14])
         lead_id = lead_id[0][0]
         """create a note in pipedrive"""
-        if lead_id:
+        if "Marseille" not in job[4]:
+            SYM.app('postgre').update_pe_note_id("Not Marseille", job[0])
+        elif lead_id:
             note = SYM.app('pipedrive').create_note_deal(content, lead_id)
             note_id = note["data"]["id"]
             SYM.app('postgre').update_pe_note_id(note_id, job[0])

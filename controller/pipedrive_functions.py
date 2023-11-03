@@ -21,6 +21,7 @@ def clean(request, SYM):
         print("deal: ", deal)
         deal_id = deal['id']
         deal_related_objects = SYM.app('pipedrive').get_deal_related_objects(deal_id)
+        data = SYM.app('postgre').read_account_business_from_pipedriveID(deal_id)
         try:
             deal_related_objects["person"]
         except:
@@ -43,50 +44,69 @@ def clean(request, SYM):
             deal_company = deal_related_objects["organization"]
             comp_keys = list(deal_company.keys())
             company_members = deal_company[comp_keys[0]]["people_count"]
+            company_name = deal_company[comp_keys[0]]["name"]
         else:
             deal_company = None
             company_members = None
-        data = ""
-        deal_pipeline =deal_related_objects["pipeline"]
-        pipe_keys = list(deal_pipeline.keys())
-        pipe_name = deal_pipeline[pipe_keys[0]]["name"]
-
+            company_name = None
+        try:
+            deal_pipeline = deal_related_objects["pipeline"]
+            pipe_keys = list(deal_pipeline.keys())
+            pipe_name = deal_pipeline[pipe_keys[0]]["name"]
+        except:
+            deal_pipeline = "No pipeline"
+        print("deal_pipeline: ", deal_pipeline)
         # company_members = SYM.app('pipedrive').get_organization_details(company_id)["people_count"]
         if deal_person != None:
             if len(deal['person_id']['phone']) > 1:
                 deal_phone = [x['value'] for x in deal['person_id']['phone']]
             else:
                 deal_phone = deal['person_id']['phone'][0]['value']
-            print("deal_phone: ", deal_phone)
         # if deal_company != None:
             if len(deal['person_id']['email']) > 1:
                 deal_email = [x['value'] for x in deal['person_id']['email']]
             else:
                 deal_email = deal['person_id']['email'][0]['value']
-            print("deal_email: ", deal_email)
 
         print("company_members: ", company_members)
+        deal_title = f"Deal: {company_name}"
 
-        if deal_person == None:
+        if deal_pipeline == "No pipeline":
+            """insert problem deal_id"""
+            problem = "Pipeline not found"
+            try:
+                SYM.app('postgre').insert_problem_deal_id(deal_id, problem)
+            except:
+                pass
+
+        elif deal_person == None:
             """insert problem deal_id"""
             problem = f"deal_id: {deal_id} - deal_person: {deal_person} - deal_company: {deal_company}"
-            SYM.app('postgre').insert_problem_deal_id(deal_id, problem)
-
+            try:
+                SYM.app('postgre').insert_problem_deal_id(deal_id, problem)
+            except:
+                pass
         elif deal_company == None:
             """insert problem deal_id"""
             problem = f"deal_id: {deal_id} - deal_person: {deal_person} - deal_company: {deal_company}"
-            SYM.app('postgre').insert_problem_deal_id(deal_id, problem)
-
+            try:
+                SYM.app('postgre').insert_problem_deal_id(deal_id, problem)
+            except:
+                pass
         elif len(deal_person) > 1 or len(deal_company) > 1 or company_members > 2 or company_members == 0:
             """insert problem deal_id"""
             problem = f"company_members: {company_members}"
-            SYM.app('postgre').insert_problem_deal_id(deal_id, problem)
-        
+            try:
+                SYM.app('postgre').insert_problem_deal_id(deal_id, problem)
+            except:
+                pass
         elif SYM.app('postgre').read_account_business_from_pipedriveID(deal_id) != []:
             data = SYM.app('postgre').read_account_business_from_pipedriveID(deal_id)[0]
             """update pipe_business"""
             SYM.app('pipedrive').update_person_from_account_business(person_id, data)
             SYM.app('pipedrive').update_organization_from_account_business(company_id, data)
+            SYM.app('pipedrive').update_deal_businessIdField(deal_id, data)
+            SYM.app('pipedrive').update_deal_name(deal_id, deal_title)
             try:
                 SYM.app('postgre').insert_link_account(data[0], person_id)
             except:
@@ -96,7 +116,10 @@ def clean(request, SYM):
             except:
                 pass
             if SYM.app('postgre').read_link_business_deal_from_business_id(data[6]) == []:
-                SYM.app('postgre').insert_link_business_deal(data[6], deal_id, pipe_name)
+                try:
+                    SYM.app('postgre').insert_link_business_deal(data[6], deal_id, pipe_name)
+                except:
+                    pass
             else:
                 existing_deal = SYM.app('postgre').read_link_business_deal_from_business_id(data[6])[0]
                 existing_deal_business_id = existing_deal[0]
@@ -104,24 +127,49 @@ def clean(request, SYM):
                 existing_deal_id = existing_deal[1]
                 if existing_deal_pipe_name == pipe_name == 'OUTBOUND NEW':
                     problem = f"deal_id: {deal_id} - pipe_name: {pipe_name} - existing_deal_id: {existing_deal_id} - existing_deal_pipe_name: {existing_deal_pipe_name}"
-                    SYM.app('postgre').insert_problem_deal_id(deal_id, problem)
-                    SYM.app('postgre').insert_problem_deal_id(existing_deal_id, problem)
-                    SYM.app('postgre').remove_link_business_deal(deal_id)
-                    SYM.app('postgre').remove_link_business_deal(existing_deal_id)
+                    try:
+                        SYM.app('postgre').insert_problem_deal_id(deal_id, problem)
+                    except:
+                        pass
+                    try:
+                        SYM.app('postgre').insert_problem_deal_id(existing_deal_id, problem)
+                    except:
+                        pass
+                    try:
+                        SYM.app('postgre').remove_link_business_deal(deal_id)
+                    except:
+                        pass
+                    try:
+                        SYM.app('postgre').remove_link_business_deal(existing_deal_id)
+                    except:
+                        pass
+                    print("problem: ", problem)
                 elif existing_deal_pipe_name != pipe_name:
                     if existing_deal_pipe_name == 'OUTBOUND NEW':
                         # Merge deal with existing deal as parent
                         SYM.app('pipedrive').merge_deal(deal_id, existing_deal_id)
+                        print("deal merge: ", "deal id: ", deal_id, "existing deal id: ", existing_deal_id)
                         # SYM.app('postgre').update_link_business_deal(deal_id, existing_deal_id)
                         deal_id = existing_deal_id
                     elif pipe_name == 'OUTBOUND NEW':
                         # Merge deal with existing deal as child
                         SYM.app('pipedrive').merge_deal(existing_deal_id, deal_id)
-                        SYM.app('postgre').update_link_business_deal(existing_deal_business_id, deal_id, pipe_name)
+                        try:
+                            SYM.app('postgre').update_link_business_deal(existing_deal_business_id, deal_id, pipe_name)
+                        except:
+                            pass
+                        # SYM.app('postgre').update_link_business_deal(existing_deal_business_id, deal_id, pipe_name)
+                        print("deal merge: ", "deal id: ", deal_id, "existing deal id: ", existing_deal_id)
                     else:
                         # Merge deal with existing deal as parent
                         SYM.app('pipedrive').merge_deal(existing_deal_id, deal_id)
-                        SYM.app('postgre').update_link_business_deal(existing_deal_business_id, deal_id, pipe_name)
+                        try:
+                            SYM.app('postgre').update_link_business_deal(existing_deal_business_id, deal_id, pipe_name)
+                        except:
+                            pass
+                        print("deal merge: ", "deal id: ", deal_id, "existing deal id: ", existing_deal_id)
+                    # deal_title = f"Deal: {company_name}"
+                    # SYM.app('pipedrive').update_deal_name(deal_id, deal_title)
                 # SYM.app('postgre').insert_link_business_deal(data[6], deal_id, pipe_name)
 
         elif deal_email:
@@ -135,6 +183,8 @@ def clean(request, SYM):
                     """update pipe_business"""
                     SYM.app('pipedrive').update_person_from_account_business(person_id, data)
                     SYM.app('pipedrive').update_organization_from_account_business(company_id, data)
+                    SYM.app('pipedrive').update_deal_businessIdField(deal_id, data)
+                    SYM.app('pipedrive').update_deal_name(deal_id, deal_title)
                     try:
                         SYM.app('postgre').insert_link_account(data[0], person_id)
                     except:
@@ -144,7 +194,10 @@ def clean(request, SYM):
                     except:
                         pass
                     if SYM.app('postgre').read_link_business_deal_from_business_id(data[6]) == []:
-                        SYM.app('postgre').insert_link_business_deal(data[6], deal_id, pipe_name)
+                        try:
+                            SYM.app('postgre').insert_link_business_deal(data[6], deal_id, pipe_name)
+                        except:
+                            pass
                     else:
                         existing_deal = SYM.app('postgre').read_link_business_deal_from_business_id(data[6])[0]
                         existing_deal_business_id = existing_deal[0]
@@ -152,24 +205,49 @@ def clean(request, SYM):
                         existing_deal_id = existing_deal[1]
                         if existing_deal_pipe_name == pipe_name == 'OUTBOUND NEW':
                             problem = f"deal_id: {deal_id} - pipe_name: {pipe_name} - existing_deal_id: {existing_deal_id} - existing_deal_pipe_name: {existing_deal_pipe_name}"
-                            SYM.app('postgre').insert_problem_deal_id(deal_id, problem)
-                            SYM.app('postgre').insert_problem_deal_id(existing_deal_id, problem)
-                            SYM.app('postgre').remove_link_business_deal(deal_id)
-                            SYM.app('postgre').remove_link_business_deal(existing_deal_id)
+                            try:
+                                SYM.app('postgre').insert_problem_deal_id(deal_id, problem)
+                            except:
+                                pass
+                            try:
+                                SYM.app('postgre').insert_problem_deal_id(existing_deal_id, problem)
+                            except:
+                                pass
+                            try:
+                                SYM.app('postgre').remove_link_business_deal(deal_id)
+                            except:
+                                pass
+                            try:
+                                SYM.app('postgre').remove_link_business_deal(existing_deal_id)
+                            except:
+                                pass
+                            print("problem: ", problem)
                         elif existing_deal_pipe_name != pipe_name:
                             if existing_deal_pipe_name == 'OUTBOUND NEW':
                                 # Merge deal with existing deal as parent
                                 SYM.app('pipedrive').merge_deal(deal_id, existing_deal_id)
+                                print("deal merge: ", "deal id: ", deal_id, "existing deal id: ", existing_deal_id)
                                 # SYM.app('postgre').update_link_business_deal(deal_id, existing_deal_id)
                                 deal_id = existing_deal_id
                             elif pipe_name == 'OUTBOUND NEW':
                                 # Merge deal with existing deal as child
                                 SYM.app('pipedrive').merge_deal(existing_deal_id, deal_id)
-                                SYM.app('postgre').update_link_business_deal(existing_deal_business_id, deal_id, pipe_name)
+                                try:
+                                    SYM.app('postgre').update_link_business_deal(existing_deal_business_id, deal_id, pipe_name)
+                                except:
+                                    pass
+                                print("deal merge: ", "deal id: ", deal_id, "existing deal id: ", existing_deal_id)
                             else:
                                 # Merge deal with existing deal as parent
                                 SYM.app('pipedrive').merge_deal(existing_deal_id, deal_id)
-                                SYM.app('postgre').update_link_business_deal(existing_deal_business_id, deal_id, pipe_name)
+                                try:
+                                    SYM.app('postgre').update_link_business_deal(existing_deal_business_id, deal_id, pipe_name)
+                                except:
+                                    pass
+                                print("deal merge: ", "deal id: ", deal_id, "existing deal id: ", existing_deal_id)
+                            
+                            # deal_title = f"Deal: {company_name}"
+                            # SYM.app('pipedrive').update_deal_name(deal_id, deal_title)
                         # SYM.app('postgre').insert_link_business_deal(data[6], deal_id, pipe_name)
                     break
                 else:
@@ -193,6 +271,8 @@ def clean(request, SYM):
                     """update pipe_business"""
                     SYM.app('pipedrive').update_person_from_account_business(person_id, data)
                     SYM.app('pipedrive').update_organization_from_account_business(company_id, data)
+                    SYM.app('pipedrive').update_deal_businessIdField(deal_id, data)
+                    SYM.app('pipedrive').update_deal_name(deal_id, deal_title)
                     try:
                         SYM.app('postgre').insert_link_account(data[0], person_id)
                     except:
@@ -202,32 +282,59 @@ def clean(request, SYM):
                     except:
                         pass
                     if SYM.app('postgre').read_link_business_deal_from_business_id(data[6]) == []:
-                        SYM.app('postgre').insert_link_business_deal(data[6], deal_id, pipe_name)
+                        try:
+                            SYM.app('postgre').insert_link_business_deal(data[6], deal_id, pipe_name)
+                        except:
+                            pass
                     else:
                         existing_deal = SYM.app('postgre').read_link_business_deal_from_business_id(data[6])[0]
                         existing_deal_business_id = existing_deal[0]
                         existing_deal_pipe_name = existing_deal[2]
                         existing_deal_id = existing_deal[1]
                         if existing_deal_pipe_name == pipe_name == 'OUTBOUND NEW':
-                            problem = f"deal_id: {deal_id} - pipe_name: {pipe_name} - existing_deal_id: {existing_deal_id} - existing_deal_pipe_name: {existing_deal_pipe_name}"
-                            SYM.app('postgre').insert_problem_deal_id(deal_id, problem)
-                            SYM.app('postgre').insert_problem_deal_id(existing_deal_id, problem)
-                            SYM.app('postgre').remove_link_business_deal(deal_id)
-                            SYM.app('postgre').remove_link_business_deal(existing_deal_id)
+                            try:
+                                SYM.app('postgre').insert_problem_deal_id(deal_id, problem)
+                            except:
+                                pass
+                            try:
+                                SYM.app('postgre').insert_problem_deal_id(existing_deal_id, problem)
+                            except:
+                                pass
+                            try:
+                                SYM.app('postgre').remove_link_business_deal(deal_id)
+                            except:
+                                pass
+                            try:
+                                SYM.app('postgre').remove_link_business_deal(existing_deal_id)
+                            except:
+                                pass
+                            print("problem: ", problem)
                         elif existing_deal_pipe_name != pipe_name:
                             if existing_deal_pipe_name == 'OUTBOUND NEW':
                                 # Merge deal with existing deal as parent
                                 SYM.app('pipedrive').merge_deal(deal_id, existing_deal_id)
+                                print("deal merge: ", "deal id: ", deal_id, "existing deal id: ", existing_deal_id)
                                 # SYM.app('postgre').update_link_business_deal(deal_id, existing_deal_id)
                                 deal_id = existing_deal_id
                             elif pipe_name == 'OUTBOUND NEW':
                                 # Merge deal with existing deal as child
                                 SYM.app('pipedrive').merge_deal(existing_deal_id, deal_id)
-                                SYM.app('postgre').update_link_business_deal(existing_deal_business_id, deal_id, pipe_name)
+                                try:
+                                    SYM.app('postgre').update_link_business_deal(existing_deal_business_id, deal_id, pipe_name)
+                                except:
+                                    pass
+                                print("deal merge: ", "deal id: ", deal_id, "existing deal id: ", existing_deal_id)
                             else:
                                 # Merge deal with existing deal as parent
                                 SYM.app('pipedrive').merge_deal(existing_deal_id, deal_id)
-                                SYM.app('postgre').update_link_business_deal(existing_deal_business_id, deal_id, pipe_name)
+                                try:
+                                    SYM.app('postgre').update_link_business_deal(existing_deal_business_id, deal_id, pipe_name)
+                                except:
+                                    pass
+                                print("deal merge: ", "deal id: ", deal_id, "existing deal id: ", existing_deal_id)
+                            
+                            # deal_title = f"Deal: {company_name}"
+                            # SYM.app('pipedrive').update_deal_name(deal_id, deal_title)
                         # SYM.app('postgre').insert_link_business_deal(data[6], deal_id, pipe_name)
                     break
                 else:
@@ -281,11 +388,3 @@ def test(request, SYM):
     else:
         print(duplicates)
         return duplicates.to_json()
-    
-    # return "done"
-
-
-def t(request, SYM):
-    # print(SYM.app('postgre').read_link_business_deal(7))
-    SYM.app('postgre').remove_link_business_deal(55)
-    return "done"
