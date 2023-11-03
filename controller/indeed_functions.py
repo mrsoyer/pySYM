@@ -73,13 +73,14 @@ def wf_2(request, SYM):
     for job in data_postgre:
         base_url = "https://fr.indeed.com/emplois?q=1%C2%A0000+%E2%82%AC&l=marseille+%2813%29&sc=0bf%3Aexrec%28%29%2Ckf%3Acmpsec%28W2F4E%29%3B&fromage=1&vjk="
         content = f"<b>Offre:<b> Indeed <br>\
-        <b>url: <b> {base_url}{job[0]}<br> \
+        <b>url:<b> {base_url}{job[0]} <br> \
         <b>Poste:<b> {job[1]} / <b>Entreprise:<b> {job[4]} <br> \
         <b>Effectif(s):<b> {job[3]} <br> \
         <b>Localisation:<b> {job[5]} <br> \
         <b>Salaire:<b> {job[2]} <br> \
-        <b>Type de Contrat:<b> {job[3]} <br> \
-        <b>Description du poste:<b> {job[6]} <br>"
+        <b>Type de Contrat:<b> {job[3]} <br><br> \
+        <b>Description du poste:<b> {job[6]}"
+
         lead_id = SYM.app('postgre').get_indeed_lead_id(job[7])
         lead_id = lead_id[0][0]
         """create a note in pipedrive"""
@@ -89,5 +90,5 @@ def wf_2(request, SYM):
             """update the job offer with the note_id in database"""
             SYM.app('postgre').update_indeed_note_id(note_id, job[0])
         else:
-            SYM.app('postgre').update_indeed_note_id("No lead", job[0])
+            SYM.app('postgre').update_indeed_note_id("no lead id", job[0])
     return "done"
