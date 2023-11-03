@@ -89,6 +89,7 @@ def wf_2(request, SYM):
             note_id = note["data"]["id"]
             """update the job offer with the note_id in database"""
             SYM.app('postgre').update_indeed_note_id(note_id, job[0])
+            SYM.app('pipedrive').update_lead_metier(lead_id, job[1])
         else:
             SYM.app('postgre').update_indeed_note_id("no lead id", job[0])
     return "done"

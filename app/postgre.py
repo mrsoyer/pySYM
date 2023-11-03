@@ -377,10 +377,10 @@ def read_link_business_deal_from_business_id(business_id):
 
 
 """update link business_deal table with deal_id"""
-def update_link_business_deal(deal_id, new_deal_id, new_pipeline_name):
+def update_link_business_deal(business_id, new_deal_id, new_pipeline_name):
      conn = connect()
      cur = conn.cursor()
-     cur.execute("UPDATE sym.link_business_deal SET deal_id = '%s', pipeline_name = %s WHERE deal_id = '%s'", (new_deal_id, new_pipeline_name, deal_id))
+     cur.execute("UPDATE sym.link_business_deal SET deal_id = '%s', pipeline_name = %s WHERE business_id = %s", (new_deal_id, new_pipeline_name, business_id))
      conn.commit()
      conn.close()
 

@@ -55,6 +55,17 @@ def create_lead(title, person_id, label_id):
      return response.json()
 
 
+"""update a lead's "metier" field in pipedrive"""
+def update_lead_metier(lead_id, metier):
+     TOKEN, PIPEDRIVE_BASE_URL = connect()
+     url = PIPEDRIVE_BASE_URL + f"leads/{lead_id}"
+     data = {
+          "d8881c934ea925667d80e429c472c87c0a0a99f0": metier
+     }
+     response = requests.patch(url, params=TOKEN, json=data)
+     return response.json()
+
+
 """create a note in pipedrive"""
 """content = job offer: title / info: all details of the job offer"""
 def create_note_deal(content, lead_id):

@@ -119,6 +119,7 @@ def wf_2(request, SYM):
             note = SYM.app('pipedrive').create_note_deal(content, lead_id)
             note_id = note["data"]["id"]
             SYM.app('postgre').update_pe_note_id(note_id, job[0])
+            SYM.app('pipedrive').update_lead_metier(lead_id, job[1])
         else:
             SYM.app('postgre').update_pe_note_id("no lead id", job[0])
     return "done"

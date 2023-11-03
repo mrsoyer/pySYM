@@ -99,6 +99,7 @@ def clean(request, SYM):
                 SYM.app('postgre').insert_link_business_deal(data[6], deal_id, pipe_name)
             else:
                 existing_deal = SYM.app('postgre').read_link_business_deal_from_business_id(data[6])[0]
+                existing_deal_business_id = existing_deal[0]
                 existing_deal_pipe_name = existing_deal[2]
                 existing_deal_id = existing_deal[1]
                 if existing_deal_pipe_name == pipe_name == 'OUTBOUND NEW':
@@ -116,11 +117,11 @@ def clean(request, SYM):
                     elif pipe_name == 'OUTBOUND NEW':
                         # Merge deal with existing deal as child
                         SYM.app('pipedrive').merge_deal(existing_deal_id, deal_id)
-                        SYM.app('postgre').update_link_business_deal(existing_deal_id, deal_id, pipe_name)
+                        SYM.app('postgre').update_link_business_deal(existing_deal_business_id, deal_id, pipe_name)
                     else:
                         # Merge deal with existing deal as parent
                         SYM.app('pipedrive').merge_deal(existing_deal_id, deal_id)
-                        SYM.app('postgre').update_link_business_deal(existing_deal_id, deal_id, pipe_name)
+                        SYM.app('postgre').update_link_business_deal(existing_deal_business_id, deal_id, pipe_name)
                 # SYM.app('postgre').insert_link_business_deal(data[6], deal_id, pipe_name)
 
         elif deal_email:
@@ -146,6 +147,7 @@ def clean(request, SYM):
                         SYM.app('postgre').insert_link_business_deal(data[6], deal_id, pipe_name)
                     else:
                         existing_deal = SYM.app('postgre').read_link_business_deal_from_business_id(data[6])[0]
+                        existing_deal_business_id = existing_deal[0]
                         existing_deal_pipe_name = existing_deal[2]
                         existing_deal_id = existing_deal[1]
                         if existing_deal_pipe_name == pipe_name == 'OUTBOUND NEW':
@@ -163,11 +165,11 @@ def clean(request, SYM):
                             elif pipe_name == 'OUTBOUND NEW':
                                 # Merge deal with existing deal as child
                                 SYM.app('pipedrive').merge_deal(existing_deal_id, deal_id)
-                                SYM.app('postgre').update_link_business_deal(existing_deal_id, deal_id, pipe_name)
+                                SYM.app('postgre').update_link_business_deal(existing_deal_business_id, deal_id, pipe_name)
                             else:
                                 # Merge deal with existing deal as parent
                                 SYM.app('pipedrive').merge_deal(existing_deal_id, deal_id)
-                                SYM.app('postgre').update_link_business_deal(existing_deal_id, deal_id, pipe_name)
+                                SYM.app('postgre').update_link_business_deal(existing_deal_business_id, deal_id, pipe_name)
                         # SYM.app('postgre').insert_link_business_deal(data[6], deal_id, pipe_name)
                     break
                 else:
@@ -203,6 +205,7 @@ def clean(request, SYM):
                         SYM.app('postgre').insert_link_business_deal(data[6], deal_id, pipe_name)
                     else:
                         existing_deal = SYM.app('postgre').read_link_business_deal_from_business_id(data[6])[0]
+                        existing_deal_business_id = existing_deal[0]
                         existing_deal_pipe_name = existing_deal[2]
                         existing_deal_id = existing_deal[1]
                         if existing_deal_pipe_name == pipe_name == 'OUTBOUND NEW':
@@ -220,11 +223,11 @@ def clean(request, SYM):
                             elif pipe_name == 'OUTBOUND NEW':
                                 # Merge deal with existing deal as child
                                 SYM.app('pipedrive').merge_deal(existing_deal_id, deal_id)
-                                SYM.app('postgre').update_link_business_deal(existing_deal_id, deal_id, pipe_name)
+                                SYM.app('postgre').update_link_business_deal(existing_deal_business_id, deal_id, pipe_name)
                             else:
                                 # Merge deal with existing deal as parent
                                 SYM.app('pipedrive').merge_deal(existing_deal_id, deal_id)
-                                SYM.app('postgre').update_link_business_deal(existing_deal_id, deal_id, pipe_name)
+                                SYM.app('postgre').update_link_business_deal(existing_deal_business_id, deal_id, pipe_name)
                         # SYM.app('postgre').insert_link_business_deal(data[6], deal_id, pipe_name)
                     break
                 else:
