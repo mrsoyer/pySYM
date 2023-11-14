@@ -128,3 +128,57 @@ def wf_2(request, SYM):
         else:
             SYM.app('postgre').update_pe_note_id("no lead id", job[0])
     return "done"
+
+
+
+
+
+
+
+####################################################################################
+
+
+def scrape_job_titles_and_references(request, SYM):
+    SYM.app('postgre').connect()
+    all_job_offers = SYM.app('pe').get_all_job_titles_and_references(request["body"]["url"])
+
+    # for job in all_job_offers["results"]:
+    #     try:
+    #         SYM.app('postgre').insert_pe_job_offer(job["job_title"], job["job_reference"])
+    #     except:
+    #         pass
+    return all_job_offers
+
+
+def update_job_offers(request, SYM):
+    data = SYM.app('postgre').read_pe_job_offers()
+    res = []
+    for job in data:
+        if job[-2] == False:
+            job_details = SYM.app('pe').scrape_job_details(job[0])
+            res.append(job_details)
+
+            # try:
+            #     SYM.app('postgre').update_pe_job_offer(job[0], job_details["company_name"], job_details["company_size"], job_details["company_city"], job_details["company_postal_code"], job_details["company_region"], job_details["company_country"], job_details["description"], job_details["experience"], job_details["skills_list"], job_details["contract_type"], job_details["hours"], job_details["salary"])
+            # except:
+            #     pass
+            # """insert company in its table if it doesn't exist in the table"""
+            # try:
+            #     SYM.app('postgre').insert_pe_company(job_details["company_name"], job_details["company_postal_code"], job_details["company_city"])
+            # except:
+            #     pass
+    return res
+
+
+def update_company(request, SYM):
+    data = SYM.app('postgre').read_pe_companies()
+    res = []
+    for company in data:
+        if company[-3] == False:
+            company_details = SYM.app('gmaps').get_company_info(company[1], company[2])
+            res.append(company_details)
+            # try:
+            #     SYM.app('postgre').update_pe_company(company[0], company_details["address"], company_details["website"], company_details["phone"], company_details["lat"], company_details["lng"])
+            # except:
+            #     pass
+    return res
