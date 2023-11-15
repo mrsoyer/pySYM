@@ -181,7 +181,12 @@ def update_company_v2(request, SYM):
     for company in data:
         if company[-4] == False:
             company_details = SYM.app('gmaps').get_company_info(company[1], company[2])
+            print(company_details)
+            if company_details != None:
+                company_id = company[0]
+                company_details["company_id"] = company_id
             res.append(company_details)
+            
             # try:
             #     SYM.app('postgre').update_pe_company(company[0], company_details["address"], company_details["website"], company_details["phone"], company_details["lat"], company_details["lng"])
             # except:
