@@ -156,12 +156,13 @@ def update_job_offers_v2(request, SYM):
     for job in data:
         if job[-3] == False:
             job_details = SYM.app('pe').scrape_job_details(job[0])
-            company_id = str(job_details["company_name"]) + str(job_details["company_postal_code"])
-            company_id = company_id.replace(" ", "").replace(" ", "").replace("'", "").replace("(", "").replace(")", "").replace(".", "").replace(",", "").replace("-", "").replace("_", "")
-            job_details["company_id"] = company_id
-            print(job_details)
-            res.append(job_details)
-            break
+            if "company_name" in job_details:
+                # if job_details["company_name"]:
+                company_id = str(job_details["company_name"]) + str(job_details["company_postal_code"])
+                company_id = company_id.replace(" ", "").replace(" ", "").replace("'", "").replace("(", "").replace(")", "").replace(".", "").replace(",", "").replace("-", "").replace("_", "")
+                job_details["company_id"] = company_id
+                res.append(job_details)
+            # break
 
             # try:
             #     SYM.app('postgre').update_pe_job_offer(job[0], job_details["company_name"], job_details["company_size"], job_details["company_city"], job_details["company_postal_code"], job_details["company_region"], job_details["company_country"], job_details["description"], job_details["experience"], job_details["skills_list"], job_details["contract_type"], job_details["hours"], job_details["salary"])
