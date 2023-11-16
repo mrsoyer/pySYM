@@ -124,3 +124,46 @@ def update_company_v2(request, SYM):
             # except:
             #     pass
     return res
+
+
+"""Work flow to create a person in pipedrive if not exist, create a lead and update the company with the pipedrive_id and lead_id in database"""
+def wf_1_v2(request, SYM):
+    """get companies which have no pipedrive_id from database"""
+    data_postgre = SYM.app('postgre').get_indeed_companies_with_no_pipedrive_id()
+
+    for company in data_postgre:
+        """check if the company has not a phone number, skip it"""
+        if company[5] == "not available":
+            SYM.app('postgre').update_indeed_pipedrive_id("No Phone", company[0])
+            continue
+        """create a person in pipedrive"""
+        if "Marseille" not in company[2]:
+            SYM.app('postgre').update_indeed_pipedrive_id("No Marseille", company[0])
+        else:
+            person = SYM.app('pipedrive').create_person(company[1], company[2], company[3], company[4], company[5])
+            person_id = person["data"]["id"]
+            """create a lead in pipedrive"""
+            indeed_label = "c55790b0-57c8-11ee-86c1-37018efb0033"
+            lead = SYM.app('pipedrive').create_lead(company[1], person["data"]["id"], indeed_label)
+            lead_id = lead["data"]["id"]
+            """update the company with the pipedrive_id and lead_id in database"""
+            SYM.app('postgre').update_indeed_pipedrive_id(person_id, company[0])
+            SYM.app('postgre').update_indeed_lead_id(lead_id, company[0])
+
+    return "done"
+
+
+
+def test(request, SYM):
+    data = SYM.app('pipedrive').test()['data']
+    print(data[0])
+    leads_id = []
+    for d in data:
+        leads_id.append(d['id'])
+        print(d['id'])
+    
+    for lead_id in leads_id:
+        SYM.app('pipedrive').update_lead_metier(lead_id, "test")
+
+    return leads_id
+

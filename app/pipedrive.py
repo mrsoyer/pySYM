@@ -207,3 +207,16 @@ def update_deal_name(deal_id, name):
      }
      response = requests.put(url, params=TOKEN, json=data)
      return response.json()
+
+
+def test():
+     TOKEN, PIPEDRIVE_BASE_URL = connect()
+     url = "https://api.pipedrive.com/v1/leads?archived_status=not_archived&api_token=9012eafcfea73a9c86e9a8586f7b28a95e10246d"
+     payload = {}
+     headers = {
+     'Accept': 'application/json',
+     'Cookie': '__cf_bm=nEWH6vKjy3wrPiXvf2bYSJbLfeo7gDaTjs6L.sgwWkk-1700131591-0-AYDxukxA8aPHEdzstaJz1zEKD51esd5PkG+67IRd4epyVBzYmxhnTRykPk176KkhdqLRTzCwpmeuDIPvGmyoJ2M='
+     }
+
+     response = requests.request("GET", url, headers=headers, data=payload)
+     return response.json()
