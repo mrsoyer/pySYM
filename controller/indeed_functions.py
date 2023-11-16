@@ -113,9 +113,12 @@ def update_company_v2(request, SYM):
         if company[-4] == False:
             company_details = SYM.app('gmaps').get_company_info(company[1], company[2])
             if company_details:
+                company_id = company[0]
+                company_details["company_id"] = company_id
                 res.append(company_details)
             else:
-                 SYM.app('postgre').update_indeed_company(company[0], "not available", "not available", "not available", "not available", "not available")
+                SYM.app('postgre').update_indeed_company(company[0], "not available", "not available", "not available", "not available", "not available")
+                print(company[0], ": not available")
             # try:
             #     SYM.app('postgre').update_indeed_company(company[0], company_details["address"], company_details["website"], company_details["phone"], company_details["lat"], company_details["lng"])
             # except:
