@@ -97,3 +97,27 @@ def wf_2(request, SYM):
         else:
             SYM.app('postgre').update_indeed_note_id("no lead id", job[0])
     return "done"
+
+
+
+
+
+#############################################################################################################
+
+
+"""update company details in the company table from google maps"""
+def update_company_v2(request, SYM):
+    data = SYM.app('postgre').read_indeed_companies()
+    res = []
+    for company in data:
+        if company[-4] == False:
+            company_details = SYM.app('gmaps').get_company_info(company[1], company[2])
+            if company_details:
+                res.append(company_details)
+            else:
+                 SYM.app('postgre').update_indeed_company(company[0], "not available", "not available", "not available", "not available", "not available")
+            # try:
+            #     SYM.app('postgre').update_indeed_company(company[0], company_details["address"], company_details["website"], company_details["phone"], company_details["lat"], company_details["lng"])
+            # except:
+            #     pass
+    return res
