@@ -2,6 +2,7 @@ import json
 import jstyleson
 import psycopg2
 import os
+from datetime import datetime
 
 
 """connect to the postgre database"""
@@ -169,7 +170,10 @@ def insert_indeed_job_offer(id ,position_name, salary, jobType, company_name, lo
      cur = conn.cursor()
      postal_code = location.split(" ")[0]
      company_id = str(company_name + postal_code).replace(" ", "").replace("'", "").replace("(", "").replace(")", "").replace(".", "").replace(",", "").replace("-", "").replace("_", "")
-     cur.execute("INSERT INTO sym.indeed_job_offer (id , position_name, salary, job_type, company_name, location, description, company_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (id ,position_name, salary, jobType, company_name, location, description, company_id))
+     """get current time"""
+     now = datetime.now()
+     formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
+     cur.execute("INSERT INTO sym.indeed_job_offer (id , position_name, salary, job_type, company_name, location, description, company_id, created_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", (id ,position_name, salary, jobType, company_name, location, description, company_id, formatted_date))
      conn.commit()
      conn.close()
 
@@ -180,7 +184,10 @@ def insert_indeed_company(name, location, description):
      cur = conn.cursor()
      postal_code = location.split(" ")[0]
      company_id = str(name + postal_code).replace(" ", "").replace("'", "").replace("(", "").replace(")", "").replace(".", "").replace(",", "").replace("-", "").replace("_", "")
-     cur.execute("INSERT INTO sym.indeed_company (company_id, name, location, description) VALUES (%s, %s, %s, %s)", (company_id, name, location, description))
+     """get current time"""
+     now = datetime.now()
+     formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
+     cur.execute("INSERT INTO sym.indeed_company (company_id, name, location, description, created_at) VALUES (%s, %s, %s, %s, %s)", (company_id, name, location, description, formatted_date))
      conn.commit()
      conn.close()
 
