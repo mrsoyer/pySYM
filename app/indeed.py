@@ -25,6 +25,24 @@ def run_apify():
       },
       {
           "url": "https://fr.indeed.com/emplois?q=1%C2%A0000+%E2%82%AC&l=marseille+%2813%29&sc=0bf%3Aexrec%28%29%2Ckf%3Acmpsec%28ZYCW4%29%3B&fromage=1&vjk=4e56e63d54212219"
+      },
+      {
+          "url": "https://fr.indeed.com/jobs?q=restauration&l=marseille+%2813%29&sc=0bf%3Aexrec%28%29%3B&fromage=1&vjk=c2cb6c06f3265818"
+      },
+      {
+          "url": "https://fr.indeed.com/jobs?q=vendeur&l=marseille+%2813%29&vjk=9a300edf2d550182"
+      },
+      {
+          "url": "https://fr.indeed.com/jobs?q=manutentionnaire&l=marseille+%2813%29&sc=0bf%3Aexrec%28%29%3B&fromage=1&vjk=b6379d8321e49e7e"
+      },
+      {
+          "url": "https://fr.indeed.com/emplois?q=garde+d%27enfants&l=marseille+%2813%29&sc=0bf%3Aexrec%28%29%3B&fromage=1&vjk=c301cc77210c2fa8"
+      },
+      {
+          "url": "https://fr.indeed.com/jobs?q=nettoyage&l=marseille+%2813%29&sc=0bf%3Aexrec%28%29%3B&fromage=1&vjk=044769625d814d7a"
+      },
+      {
+          "url": "https://fr.indeed.com/jobs?q=femme+de+chambre&l=marseille+%2813%29&sc=0bf%3Aexrec%28%29%3B&fromage=1&vjk=e2ef308691ddaa91"
       }
     ]
   })
