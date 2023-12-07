@@ -124,3 +124,9 @@ def update_company_v2(request, SYM):
             # except:
             #     pass
     return res
+
+
+
+def scrape_job_offers_v2(request, SYM):
+    all_job_offers = SYM.app('indeed').scrape_job_offers(request["body"]["defaultDatasetId"])
+    return all_job_offers
