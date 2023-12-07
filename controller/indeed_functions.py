@@ -129,4 +129,9 @@ def update_company_v2(request, SYM):
 
 def scrape_job_offers_v2(request, SYM):
     all_job_offers = SYM.app('indeed').scrape_job_offers(request["body"]["defaultDatasetId"])
+    for job in all_job_offers:
+        postal_code = job["location"].split(" ")[0]
+        company_id = str(job["company"] + postal_code).replace(" ", "").replace("'", "").replace("(", "").replace(")", "").replace(".", "").replace(",", "").replace("-", "").replace("_", "")
+        job["company_id"] = company_id
+
     return all_job_offers
