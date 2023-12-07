@@ -133,7 +133,7 @@ def scrape_job_offers_v2(request, SYM):
         postal_code = job["location"].split(" ")[0]
         company_id = str(job["company"] + postal_code).replace(" ", "").replace("'", "").replace("(", "").replace(")", "").replace(".", "").replace(",", "").replace("-", "").replace("_", "")
         job["company_id"] = company_id
-        if job["companyInfo"]["companyDescription"] == None:
-            job["companyInfo"]["companyDescription"] = "No description"
+        # if job["companyInfo"]["companyDescription"] == None:
+        #     job["companyInfo"]["companyDescription"] = "No description"
 
     return all_job_offers
