@@ -399,3 +399,24 @@ def remove_link_business_deal(deal_id):
      cur.execute("DELETE FROM sym.link_business_deal WHERE deal_id = %s", (deal_id,))
      conn.commit()
      conn.close()
+
+
+"""read meteojob_company table and return 50 first rows with company_details = false"""
+def read_meteojob_companies():
+     conn = connect()
+     cur = conn.cursor()
+     cur.execute("SELECT * FROM sym.meteojob_company WHERE company_details = false LIMIT 50")
+     rows = cur.fetchall()
+     conn.close()
+     return rows
+
+
+"""update company with details in sym.meteojob_company table"""
+def update_meteojob_company(company_id, address, website, phone):
+     conn = connect()
+     cur = conn.cursor()
+     cur.execute("UPDATE sym.meteojob_company SET address = %s, website = %s, phone = %s WHERE company_id = %s", (address, website, phone, company_id))
+     """turn company_details bool to true"""
+     cur.execute("UPDATE sym.meteojob_company SET company_details = true WHERE company_id = %s", (company_id,))
+     conn.commit()
+     conn.close()
