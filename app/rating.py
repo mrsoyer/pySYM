@@ -4,7 +4,7 @@ def rate_location(location):
     address = location.split()
 
     for element in address:
-        if len(element) == 5:
+        if len(element) == 5 and element.isdigit():
             element = int(element)
             if element in marseille:
                 return 5
