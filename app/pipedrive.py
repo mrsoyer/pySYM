@@ -220,3 +220,14 @@ def test():
 
      response = requests.request("GET", url, headers=headers, data=payload)
      return response.json()
+
+
+"""update a lead's "metier" field in pipedrive"""
+def update_lead_rate(lead_id, rate):
+     TOKEN, PIPEDRIVE_BASE_URL = connect()
+     url = PIPEDRIVE_BASE_URL + f"leads/{lead_id}"
+     data = {
+          "9b78ffa8e557ba2be6554b6357bd322a07be7493": rate
+     }
+     response = requests.patch(url, params=TOKEN, json=data)
+     return response.json()

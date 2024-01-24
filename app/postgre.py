@@ -420,3 +420,13 @@ def update_meteojob_company(company_id, address, website, phone):
      cur.execute("UPDATE sym.meteojob_company SET company_details = true WHERE company_id = %s", (company_id,))
      conn.commit()
      conn.close()
+
+
+"""get all name from trade table"""
+def get_all_trade_name():
+     conn = connect()
+     cur = conn.cursor()
+     cur.execute('SELECT name FROM public."Trade"')
+     rows = cur.fetchall()
+     conn.close()
+     return rows
