@@ -10,10 +10,10 @@ def rate_location(location):
                 return 5
             elif element == 13090 or element == 13100:
                 return 4
-            elif element[0:2] == 13:
+            elif element[:2] == "13" and element not in marseille and element != 13090 and element != 13100:
                 return 3
             else:
-                return 0
+                return 1
     
 def rate_title(title):
     pass
