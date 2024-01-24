@@ -14,6 +14,8 @@ def rate_location(location):
                 return 3
             else:
                 return 1
+        else:
+            return 0
     
 def rate_title(title):
     pass
